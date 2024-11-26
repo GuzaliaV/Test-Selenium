@@ -1,14 +1,17 @@
-# добавление соединения керонг апи
+# Kerong Api. Добавление соединения
 
-import time
-import pytest
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
+
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+
 from config import address_input, port_api
-from browser_setup import browser
+
+from time import sleep
+
 
 def add_kerong(browser):
     wait = WebDriverWait(browser, 10)
@@ -36,27 +39,35 @@ def add_kerong(browser):
     # Использовать по умолчанию
     checkbox = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='MuiSwitch-thumb css-19gndve']")))
     browser.execute_script("arguments[0].click();", checkbox)
-    time.sleep(0.1)
+    sleep(0.1)
 
     action = ActionChains(browser)
     for _ in range(3):
         action.click(checkbox)
     action.perform()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class= 'UIbutton'])[4]"))).click()
 
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
+
+
     # Проверка состояния Используется
     is_used = WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.XPATH, "//h2[text() = 'Используется']")))
     is_used_text = is_used.text.strip()
-    time.sleep(0.1)
+    sleep(0.1)
 
     if is_used_text == "Используется":
 
         # синхронизировать
         browser.find_element(By.XPATH, "(//button[@class='UIbutton'])[2]").click()
-        time.sleep(0.5)
+        sleep(0.5)
         print("Состояние- Используется, Синхронизировано")
         print()
 

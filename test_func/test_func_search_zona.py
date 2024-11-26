@@ -1,13 +1,13 @@
-# Строка Поиск в разделе зоны
+# Зоны. Строка Поиска
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import name_zone_publ
-from browser_setup import browser
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+
+from time import sleep
+from selenium.webdriver.common.keys import Keys
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
@@ -22,13 +22,18 @@ def search_zona(browser):
 
     # Клик на Зоны
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@class='table-item'])[1]"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
+
+    # данные первой строки в списке
+    WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
+    name_zona = browser.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
+    name_zona_txt = name_zona.text
 
     # строка поиска
-    searc = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
-    searc.send_keys(name_zone_publ )
-    print(f"Искомое значение {name_zone_publ}")
-    time.sleep(1)
+    search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
+    search.send_keys(name_zona_txt)
+    print(f"Поиск по значению '{name_zona_txt}'")
+    sleep(1)
 
     WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
     rows = browser.find_elements(By.CSS_SELECTOR, "tbody tr")
@@ -36,16 +41,16 @@ def search_zona(browser):
         h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
         h2_text = h2_element.text.strip()
 
-        if h2_text == name_zone_publ :
-            print(f"{h2_text} найден")
+        if h2_text == name_zona_txt :
+            print(f"'{h2_text}' найден")
             actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
             print("сброс поиска")
-            time.sleep(0.3)
+            sleep(1)
             return True
         else:
             print(f"Значение не найдено")
             actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            time.sleep(0.1)
+            sleep(0.1)
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:

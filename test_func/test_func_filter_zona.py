@@ -1,41 +1,48 @@
-# фильтр в зоне
+# Зоны. Фильтр
 
-import time
-
+from browser_setup import browser
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from browser_setup import browser
+
+from time import sleep
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
     browser.execute_script("arguments[0].scrollIntoView(true);", element)
-    time.sleep(0.1)
+    sleep(0.1)
 
 def filter_zona(browser):
     wait = WebDriverWait(browser, 20)
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # Клик на Зоны
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@class='table-item'])[1]"))).click()
 
     # клик на кнопку Фильтр
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "filter-button"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
     wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # выбрать режим доступа Публичный
     wait.until(EC.element_to_be_clickable((By.XPATH, "//li[text()='Публичный']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # применить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Применить']"))).click()
-    time.sleep(0.5)
+
+    # Получаю текст уведомления
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
+
+    sleep(0.5)
 
     # проверка найденного результата
     try:
@@ -60,25 +67,25 @@ def filter_zona(browser):
 
     # клик на кнопку Фильтр
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "filter-button"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # сброс данных
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Сбросить']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # клик на кнопку Фильтр
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "filter-button"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
     wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # выбрать режим доступа Приватный
     wait.until(EC.element_to_be_clickable((By.XPATH, "//li[text()='Приватный']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # применить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Применить']"))).click()
-    time.sleep(0.5)
+    sleep(0.5)
 
     try:
         WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
@@ -103,25 +110,32 @@ def filter_zona(browser):
 
     # клик на кнопку Фильтр
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "filter-button"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # сброс данных
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Сбросить']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # клик на кнопку Фильтр
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "filter-button"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
     wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # выбрать режим доступа Корпоративный
     wait.until(EC.element_to_be_clickable((By.XPATH, "//li[text()='Корпоративный']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # применить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Применить']"))).click()
-    time.sleep(0.5)
+
+    # Получаю текст уведомления
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
+
+    sleep(0.5)
 
     # проверка найденного результата
     try:

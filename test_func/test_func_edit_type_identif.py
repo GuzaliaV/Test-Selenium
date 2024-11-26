@@ -1,17 +1,20 @@
 # добавление типа идентиф , редактирование
 
-import time
-from selenium.webdriver import Keys
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from config import edit_type_identif, new_edit_type_identif
-from browser_setup import browser
+
+from selenium.webdriver import Keys
+from time import sleep
+
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
     browser.execute_script("arguments[0].scrollIntoView(true);", element)
-    time.sleep(0.1)
+    sleep(0.1)
 
 def edit_type_ident(browser):
     wait = WebDriverWait(browser, 20)
@@ -31,8 +34,22 @@ def edit_type_ident(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(0.1)
+
+    # Получаю текст уведомления
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
+
+    sleep(0.2)
     print(f"Карточка '{edit_type_identif}' создана")
+
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
     def edit_type_ident(browser):
         # поиск карточки
@@ -58,14 +75,21 @@ def edit_type_ident(browser):
 
                 # Сохранить
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-                time.sleep(0.1)
+
+                # Получаю текст уведомления
+                notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+                if notifications:
+                    last_notification_text = notifications[-1].text
+                    print(f"Текст уведомления: {last_notification_text}")
+
+                sleep(0.1)
                 return True
 
         # если карточка не найдена, след старница
         try:
             next_page = browser.find_element(By.XPATH, "//button[@aria-label = 'Go to next page']")
             next_page.click()
-            time.sleep(0.1)
+            sleep(0.1)
             return edit_type_ident(browser)
         except:
             print("Не найден на всех страницах")

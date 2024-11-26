@@ -1,17 +1,19 @@
-# добавление идентиф , редактирование
+# Идентификаторы. Добавление идентиф и редактирование
 
-import time
-from selenium.webdriver import Keys
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from config import edit_identif, new_edit_identif, new_edit_type_identif
-from browser_setup import browser
+
+from selenium.webdriver import Keys
+from time import sleep
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
     browser.execute_script("arguments[0].scrollIntoView(true);", element)
-    time.sleep(0.1)
+    sleep(0.5)
 
 def edit_ident(browser):
     wait = WebDriverWait(browser, 20)
@@ -31,7 +33,7 @@ def edit_ident(browser):
     # Прокручиваем до нужного элемента типа идентификатора
     option_to_select = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{new_edit_type_identif}']")))
     browser.execute_script("arguments[0].scrollIntoView();", option_to_select)
-    time.sleep(0.5)
+    sleep(0.5)
     option_to_select.click()
 
     # Ввести значение
@@ -40,7 +42,7 @@ def edit_ident(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
     print(f"Карточка '{edit_identif}' создана")
 
     def edit_iden(browser):
@@ -49,10 +51,8 @@ def edit_ident(browser):
         for row in rows:
             h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
             h2_text = h2_element.text
-
             # Прокрутка к элементу
             scroll_to_element(browser, h2_element)
-
             if h2_text == edit_identif:
                 # открыть карточку
                 browser.find_element(By.XPATH, f"//h2[text()= '{edit_identif}']").click()
@@ -73,14 +73,21 @@ def edit_ident(browser):
 
                 # Сохранить
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-                time.sleep(0.1)
+
+                # Получаю текст уведомления
+                notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+                if notifications:
+                    last_notification_text = notifications[-1].text
+                    print(f"Текст уведомления: {last_notification_text}")
+
+                sleep(0.1)
                 return True
 
         # если карточка не найдена, след старница
         try:
             next_page = browser.find_element(By.XPATH, "//button[@aria-label = 'Go to next page']")
             next_page.click()
-            time.sleep(0.1)
+            sleep(0.1)
             return edit_iden(browser)
         except:
             print("Не найден на всех страницах")

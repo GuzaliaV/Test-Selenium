@@ -1,17 +1,19 @@
-# добавление публичной зоны и редактирование
+# Зоны. Добавление публичной зоны и редактирование
 
-import time
-from selenium.webdriver import Keys
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import edit_name_zone_publ, edit_num_from_publ, edit_num_to_publ, new_edit_name_zone_publ, new_edit_num_from_publ, new_edit_num_to_publ
-from browser_setup import browser
+
+from config import edit_name_zone_publ, edit_num_from_publ, edit_num_to_publ, new_edit_name_zone_publ
+from time import sleep
+from selenium.webdriver import Keys
+
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
     browser.execute_script("arguments[0].scrollIntoView(true);", element)
-    time.sleep(0.1)
+    sleep(0.1)
 
 def edit_zone_publ(browser):
     wait = WebDriverWait(browser, 20)
@@ -45,8 +47,22 @@ def edit_zone_publ(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(0.2)
-    print(f"Зона '{edit_num_from_publ}' создана")
+
+    # Получаю текст уведомления
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
+
+    sleep(0.2)
+    print(f"Зона '{edit_name_zone_publ} {edit_num_from_publ} - {edit_num_to_publ}' создана")
+
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
     def edit_zona(browser):
         # поиск карточки платы
@@ -61,38 +77,54 @@ def edit_zone_publ(browser):
             if h2_text == edit_name_zone_publ:
                 # открыть зону
                 browser.find_element(By.XPATH, f"//h2[text()= '{edit_name_zone_publ}']").click()
-                time.sleep(0.1)
+                sleep(0.1)
 
                 # редактировать
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Редактировать']"))).click()
-                time.sleep(0.1)
+                sleep(0.1)
 
                 # Ввести наименование
                 name_zone = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
                 name_zone.send_keys(Keys.BACKSPACE * 30)
                 name_zone.send_keys(new_edit_name_zone_publ)
-                time.sleep(0.1)
+                sleep(0.1)
 
                 # Номера От
                 num1 = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[3]")))
                 num1.send_keys(Keys.CONTROL, "a")
-                num1.send_keys(new_edit_num_from_publ)
+                num1.send_keys(str(int(edit_num_from_publ)+5))
 
                 # Номера До
                 num2 = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[4]")))
                 num2.send_keys(Keys.CONTROL, "a")
-                num2.send_keys(new_edit_num_to_publ)
+                num2.send_keys(str(int(edit_num_to_publ)+5))
 
                 # сохранить
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-                time.sleep(0.2)
+
+                # Получаю текст уведомления
+                notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+                if notifications:
+                    last_notification_text = notifications[-1].text
+                    print(f"Текст уведомления: {last_notification_text}")
+
+                sleep(0.2)
+                print(f"Зона отредактирована '{new_edit_name_zone_publ} {new_edit_num_from_publ} - {new_edit_num_to_publ}'")
+
+                # Получаю текст уведомление
+                browser.implicitly_wait(10)
+                notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+                if notifications:
+                    last_notification_text = notifications[-1].text
+                    print(f"Текст уведомления: {last_notification_text}")
+
                 return True
 
         # если карточка не найдена, след старница
         try:
             next_page = browser.find_element(By.XPATH, "//button[@aria-label = 'Go to next page']")
             next_page.click()
-            time.sleep(0.1)
+            sleep(0.1)
             return edit_zona(browser)
         except:
             print("Не найден на всех страницах")

@@ -1,8 +1,8 @@
-# открыть ячейку со стартовой страници мониторинга
+# Мониторинг. Открыть ячейку
 
+from browser_setup import browser
 from test_kerong.test_authorization import authorization
 from test_func.test_func_open_lock import open_lock
-from browser_setup import browser
 
 
 def test_open_lock(browser):

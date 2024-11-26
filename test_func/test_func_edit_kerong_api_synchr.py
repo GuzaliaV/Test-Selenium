@@ -1,14 +1,17 @@
-# добавление соединения керонг апи и синхронизация
+# Kerong Api. Редактирование соединения с синхронизацией
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+
 from config import new_address_input_2, address_input_2, port_api_2
-from browser_setup import browser
 from test_func.func_search import search_line
+
+from time import sleep
+from selenium.webdriver.common.keys import Keys
+
 
 def edit_kerong_synchr(browser):
     wait = WebDriverWait(browser, 20)
@@ -26,7 +29,7 @@ def edit_kerong_synchr(browser):
     address = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id='outlined-basic'])[2]")))
     address.send_keys(Keys.BACKSPACE * 5)
     address.send_keys(address_input_2)
-    print(f"Создано соединение: {address_input_2}")
+    print(f"IP второго соединения '{address_input_2}'")
 
     # Ввести порт
     port = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id='outlined-basic'])[3]")))
@@ -35,7 +38,14 @@ def edit_kerong_synchr(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class='UIbutton'])[4]"))).click()
-    time.sleep(0.5)
+    sleep(0.2)
+
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
     # Поиск созданной карточки на первой странице
     if search_line(browser, address_input_2):
@@ -47,12 +57,12 @@ def edit_kerong_synchr(browser):
          # Редактировать IP
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Редактировать']"))).click()
         ip_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id='outlined-basic'])[2]")))
-        time.sleep(0.1)
+        sleep(0.1)
         ip_input.send_keys(Keys.BACKSPACE * 20)
-        time.sleep(0.1)
+        sleep(0.1)
         ip_input.send_keys(new_address_input_2)
-        time.sleep(0.1)
-        print(f"Отредактировано соединение: {new_address_input_2}")
+        sleep(0.1)
+        print(f"IP второго соединения изменен '{new_address_input_2}'")
 
         # Использовать по умолчанию
         checkbox = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='MuiSwitch-thumb css-19gndve']")))
@@ -65,7 +75,7 @@ def edit_kerong_synchr(browser):
 
         # Сохранить
         wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class='UIbutton'])[4]"))).click()
-        time.sleep(0.2)
+        sleep(0.2)
 
         # Проверка состояния карточки
         is_used = WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.XPATH, "//h2[text()='Используется']")))
@@ -75,7 +85,7 @@ def edit_kerong_synchr(browser):
             # Синхронизировать
             browser.find_element(By.XPATH, "(//button[@class='UIbutton'])[2]").click()
             print("Состояние Используется, Синхронизировано")
-            time.sleep(2)
+            sleep(2)
 
         else:
             # Строка с соединением
@@ -95,7 +105,7 @@ def edit_kerong_synchr(browser):
 
             # Сохранить изменения
             wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-            time.sleep(0.1)
+            sleep(0.1)
     else:
         print(f"{address_input_2} - не найден")
 

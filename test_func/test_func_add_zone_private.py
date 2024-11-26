@@ -1,13 +1,15 @@
-# добавление приватной зоны и проверка наличия
+# Зоны. Создание приватной зоны
 
-import time
-from selenium.webdriver import Keys
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from test_func.func_search import search_line
-from browser_setup import browser
 from config import name_zone_private, num_to_private, num_from_private
+
+from selenium.webdriver import Keys
+from time import sleep
 
 
 def add_zone_private(browser):
@@ -42,8 +44,15 @@ def add_zone_private(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(1)
-    print("Зона 'Приватная' создана")
+    sleep(0.2)
+    print(f"Зона '{name_zone_private}' создана")
+
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текс уведомления: {last_notification_text}")
 
     # проверка наличия созданной карточки
     if search_line(browser, name_zone_private):

@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from seleniumwire import webdriver
 import pytest
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def browser():
     # Настройка опций для Chrome
     options = Options()

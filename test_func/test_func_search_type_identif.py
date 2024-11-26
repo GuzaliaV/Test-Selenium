@@ -1,13 +1,14 @@
-# Строка Поиск в разделе Типы идентификаторы
+# Типы идентификаторов. Строка Поиска
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import new_edit_type_identif
-from browser_setup import browser
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+
+from selenium.webdriver.common.keys import Keys
+from time import sleep
+
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
@@ -27,13 +28,12 @@ def search_type_identif(browser):
     WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
     type = browser.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
     type_txt = type.text
-    print(type_txt)
 
     # строка поиска
-    searc = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
-    searc.send_keys(type_txt)
-    time.sleep(1)
-    print(f"Искомое значение '{type_txt}'")
+    search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
+    search.send_keys(type_txt)
+    sleep(1)
+    print(f"Поиск по значению '{type_txt}'")
 
     WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
     rows = browser.find_elements(By.CSS_SELECTOR, "tbody tr")

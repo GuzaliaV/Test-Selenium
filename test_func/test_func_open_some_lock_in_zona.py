@@ -1,14 +1,17 @@
-# Мoниторинг - Зона. Открытие одной ячейки
+# Мoниторинг. Зона. Открыть - несколько ячейкек
 
-import random
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import name_zone_publ
-from browser_setup import browser
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+
+from config import name_zone_publ
+
+import random
+from selenium.webdriver.common.keys import Keys
+from time import sleep
+
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
@@ -24,7 +27,7 @@ def open_lock_some(browser):
 
     # Открыть зону
     wait.until(EC.element_to_be_clickable((By.XPATH, f"//h2[text() = '{name_zone_publ}']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     lock_all = browser.find_elements(By.CLASS_NAME, "lock-item-container")
     locks_num = []
@@ -53,15 +56,22 @@ def open_lock_some(browser):
 
         # Открыть
         browser.find_element(By.XPATH, "(//button[text()= 'Открыть'])[2]").click()
-        time.sleep(1)
+
+        # Получаю текст уведомления
+        notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+        if notifications:
+            last_notification_text = notifications[-1].text
+            print(f"Текст уведомления: {last_notification_text}")
+
+        sleep(1)
 
         actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-        time.sleep(0.1)
+        sleep(0.1)
 
         print(f"Открыты ячейки с {lock_start} по {lock_stop}")
 
     click_empty_space(browser)
-    time.sleep(0.2)
+    sleep(0.2)
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:

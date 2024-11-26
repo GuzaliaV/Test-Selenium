@@ -1,8 +1,8 @@
-# Строка Поиск в разделе Замки и ячейки
+# Замки и ячейки. Строка Поиска
 
-from test_func.test_func_search_locks import search_locks
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
+from test_func.test_func_search_locks import search_locks
 
 
 def test_search_locks(browser):
@@ -10,5 +10,5 @@ def test_search_locks(browser):
     # авторизация
     authorization(browser)
 
-    # поиск платы
+    # поиск
     search_locks(browser)

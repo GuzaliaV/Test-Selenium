@@ -1,17 +1,20 @@
-# редактирование карточки CU и проверка наличия карточки
+# Платы. Редактирование платы CU
 
-import time
-from selenium.webdriver import Keys
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from config import new_edit_name_BU, edit_name_CU, edit_number_in_chain, new_edit_name_CU, new_edit_number_in_chain
-from browser_setup import browser
+
+from time import sleep
+from selenium.webdriver import Keys
+
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
     browser.execute_script("arguments[0].scrollIntoView(true);", element)
-    time.sleep(0.1)
+    sleep(0.1)
 
 def edit_card_CU(browser):
     wait = WebDriverWait(browser, 10)
@@ -40,20 +43,27 @@ def edit_card_CU(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id='demo-simple-select-helper'])[2]"))).click()
     bu = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{new_edit_name_BU}']")))
     browser.execute_script("arguments[0].scrollIntoView();", bu)
-    time.sleep(0.1)
+    sleep(0.1)
     bu.click()
 
     # Номер в цепи
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id='demo-simple-select-helper'])[3]"))).click()
     num = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{edit_number_in_chain}']")))
     browser.execute_script("arguments[0].scrollIntoView();", num)
-    time.sleep(0.1)
+    sleep(0.1)
     num.click()
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(0.2)
-    print(f"Карточка '{edit_name_CU}' создана")
+    sleep(0.2)
+    print(f"Плата '{edit_name_CU}' создана")
+
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
     def edit_card_CU(browser):
         # поиск карточки платы
@@ -83,19 +93,19 @@ def edit_card_CU(browser):
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='demo-simple-select-helper']"))).click()
                 num = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{new_edit_number_in_chain}']")))
                 browser.execute_script("arguments[0].scrollIntoView();", num)
-                time.sleep(0.1)
+                sleep(0.1)
                 num.click()
 
                 # сохранить
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-                time.sleep(0.2)
+
                 return True
 
         # если карточка не найдена, след старница
         try:
             next_page = browser.find_element(By.XPATH, "//button[@aria-label = 'Go to next page']")
             next_page.click()
-            time.sleep(0.1)
+            sleep(0.1)
             return edit_card_CU(browser)
         except:
             print("Не найден на всех страницах.")
@@ -106,6 +116,7 @@ def edit_card_CU(browser):
         print(f"'{new_edit_name_CU}' - отредактирована")
     else:
         print(f"'{new_edit_name_CU}' - не найдена")
+
 
     # проверка статус кодов, при статусе кроме 200 и 101 тест падает
     for request in browser.requests:

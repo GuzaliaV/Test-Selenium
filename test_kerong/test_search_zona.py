@@ -1,8 +1,9 @@
-# Строка Поиск в разделе зоны
+# Зоны. Строка Поиска
 
-from test_func.test_func_search_zona import search_zona
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
+from test_func.test_func_search_zona import search_zona
+
 
 
 def test_search_zona(browser):
@@ -10,5 +11,5 @@ def test_search_zona(browser):
     # авторизация
     authorization(browser)
 
-    # поиск платы
+    # поиск
     search_zona(browser)

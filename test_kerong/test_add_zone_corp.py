@@ -1,8 +1,8 @@
-# добавление корпоративной зоны и проверка наличия
+# Зоны. Создание корпоративной зоны
 
-from test_func.test_func_add_zone_corp import add_zone_corp
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
+from test_func.test_func_add_zone_corp import add_zone_corp
 
 
 def test_add_zone_corp(browser):

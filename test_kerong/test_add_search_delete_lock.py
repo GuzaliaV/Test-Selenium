@@ -1,8 +1,8 @@
-# создание, поиск,  удаление набора замков
+# Замки и ячейки. Создание набора замков, поиск, удаление
 
-from test_func.test_func_add_search_delete_lock import add_search_delete_locks
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
+from test_func.test_func_add_search_delete_lock import add_search_delete_locks
 
 
 def test_add_search_delete_lock(browser):

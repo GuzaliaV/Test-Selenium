@@ -1,11 +1,13 @@
-# Выбрать идентификатор в карточке Клиента
+# Клиенты. Карточка клиента. Выбрать идентификатор
 
-import time
+
 from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+
+from time import sleep
 
 def choose_indent_in_client(browser):
     actions = ActionChains(browser)
@@ -23,23 +25,28 @@ def choose_indent_in_client(browser):
 
         # открытие клиента и выбор идентифкатора
         if ident_text == '':
+            # Получение имени клиента
+            client_name_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h4")
+            client_name = client_name_element.text if client_name_element else "Имя не указано"
+
             actions.move_to_element(row).click().perform()
 
             # Кнопка "Выбрать"
             wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Выбрать']"))).click()
-            time.sleep(0.5)
+            sleep(0.1)
 
             # Клик по идентификатору
             ident = browser.find_element(By.CSS_SELECTOR, "tbody tr:first-child h2")
-            print(f"Клиенту привязан идентификатор '{ident.text}'")
+            print(f"Клиенту '{client_name}' привязан идентификатор '{ident.text}'")
             ident.click()
-            time.sleep(0.5)
+            sleep(0.1)
 
             # Получаю текст уведомление
-            text_message = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'notistack-snackbar']")))
-            text_message_txt = text_message.text
-            print(f"Текст уведомления: {text_message_txt}")
-            time.sleep(0.1)
+            browser.implicitly_wait(10)
+            notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+            if notifications:
+                last_notification_text = notifications[-1].text
+                print(f"Текст уведомления: {last_notification_text}")
             break
 
         for request in browser.requests:

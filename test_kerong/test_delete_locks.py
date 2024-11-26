@@ -1,4 +1,4 @@
-# удаление набора замков, первый в списке
+# Замки и ячейки. Удаление набора замков, первый в списке
 
 from browser_setup import browser
 from test_kerong.test_authorization import authorization

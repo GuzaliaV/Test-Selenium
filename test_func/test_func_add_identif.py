@@ -1,12 +1,19 @@
-# добавление идентиф и проверка наличия
+# Идентификатор. Создание карточки
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from test_func.func_search import search_line
 from config import name_type_identif, name_identif
-from browser_setup import browser
+
+from time import sleep
+
+def scroll_to_element(browser, element):
+    # Прокрутка страницы
+    browser.execute_script("arguments[0].scrollIntoView(true);", element)
+    sleep(0.5)
 
 def add_ident(browser):
     wait = WebDriverWait(browser, 20)
@@ -26,7 +33,7 @@ def add_ident(browser):
     # Прокручиваем до нужного элемента типа идентификатора
     option_to_select = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{name_type_identif}']")))
     browser.execute_script("arguments[0].scrollIntoView();", option_to_select)
-    time.sleep(0.1)
+    sleep(0.1)
     option_to_select.click()
 
     # Ввести значение
@@ -35,8 +42,15 @@ def add_ident(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(0.1)
-    print(f"Карточка {name_identif} создана")
+    sleep(0.1)
+    print(f"Создан идентификатор со значением '{name_identif}'")
+
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
 
     # проверка наличия созданной карточки

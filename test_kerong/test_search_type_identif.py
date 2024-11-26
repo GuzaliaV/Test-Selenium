@@ -1,8 +1,9 @@
-# Строка Поиск в разделе Типы идентификаторы
+# Типы идентификаторов. Строка Поиска
 
-from test_func.test_func_search_type_identif import search_type_identif
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
+from test_func.test_func_search_type_identif import search_type_identif
+
 
 
 def test_search_type_identif(browser):

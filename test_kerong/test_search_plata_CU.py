@@ -1,8 +1,8 @@
-# Строка Поиск в разделе BU платы
+# Платы. Строка Поиска. СU платы
 
-from test_func.test_func_search_plata_CU import search_plata_CU
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
+from test_func.test_func_search_plata_CU import search_plata_CU
 
 
 def test_search_plata_CU(browser):
@@ -10,5 +10,5 @@ def test_search_plata_CU(browser):
     # авторизация
     authorization(browser)
 
-    # поиск платы
+    # поиск
     search_plata_CU(browser)

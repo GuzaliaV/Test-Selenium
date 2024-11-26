@@ -1,10 +1,11 @@
-# загрузка файла на странице идентификаторы
+# Идентификаторы. Загрузка файла
 
-import time
+from browser_setup import browser
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from browser_setup import browser
+
+from time import sleep
 
 def downloads_ident(browser):
     wait = WebDriverWait(browser, 20)
@@ -17,13 +18,14 @@ def downloads_ident(browser):
 
     # клик на принтер
     browser.find_element(By.CLASS_NAME, "printer-button").click()
-    time.sleep(3)
+    sleep(1)
 
-    # Получаем текст уведомления
-    text_down_ident = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'notistack-snackbar']")))
-    text_down_ident_txt = text_down_ident.text
-    print(f"Текст уведомления: {text_down_ident_txt}")
-
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
     for request in browser.requests:
         if request.response:

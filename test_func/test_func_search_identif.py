@@ -1,13 +1,15 @@
-# Строка Поиск в разделе Идентификаторы
+# Идентификаторы. Строка Поиска
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import new_edit_identif
-from browser_setup import browser
-from selenium.webdriver.common.keys import Keys
+
 from selenium.webdriver.common.action_chains import ActionChains
+
+from time import sleep
+from selenium.webdriver.common.keys import Keys
+
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
@@ -29,25 +31,29 @@ def search_identif(browser):
     ident_txt = ident.text
 
     # строка поиска
-    searc = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
-    searc.send_keys(ident_txt)
-    time.sleep(1)
-    print(f"Искомое значение '{ident_txt}'")
-
-
     WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
     rows = browser.find_elements(By.CSS_SELECTOR, "tbody tr")
-    for row in rows:
-        h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
-        h2_text = h2_element.text.strip()
+    if rows:
+        name = rows[0].find_element(By.CSS_SELECTOR, "td:nth-child(1) h2").text
 
-        if h2_text == ident_txt:
-            print(f"'{h2_text}' найден")
-            actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            return True
-        else:
-            print(f"Значение не найдено")
-            actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+        search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
+        search.send_keys(ident_txt)
+        sleep(1)
+        print(f"Поиск по значению '{name}'")
+
+        WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
+        rows = browser.find_elements(By.CSS_SELECTOR, "tbody tr")
+        for row in rows:
+            h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
+            h2_text = h2_element.text.strip()
+
+            if h2_text == ident_txt:
+                print(f"'{h2_text}' найден")
+                actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+                return True
+            else:
+                print(f"Значение не найдено")
+                actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
 
 
     # Перебор всех перехваченных запросов

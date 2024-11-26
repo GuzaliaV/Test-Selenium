@@ -1,11 +1,13 @@
-# открыть ячейку со стартовой страници мониторинга
+# Мониторинг. Открыть ячейку
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import name_zone_publ, start_num_lock, num_from_publ, num_to_publ
-from browser_setup import browser
+
+from config import name_zone_publ, num_from_publ, num_to_publ
+
+from time import sleep
 
 def open_lock(browser):
     wait = WebDriverWait(browser, 20)
@@ -24,16 +26,17 @@ def open_lock(browser):
     browser.execute_script("arguments[0].click();", z)
 
     # ввести номер ячейки
-    browser.find_element(By.XPATH, "//input[@id = 'outlined-basic']").send_keys(start_num_lock)
+    browser.find_element(By.XPATH, "//input[@id = 'outlined-basic']").send_keys(num_from_publ)
 
     # открыть
     browser.find_element(By.XPATH, "//button[text()= 'Открыть']").click()
-    time.sleep(0.1)
+    sleep(0.1)
 
-    text_message = wait.until(EC.visibility_of_element_located(
-        (By.XPATH, "//div[@class = 'notistack-SnackbarContainer go1453831412 go2989568495 go1141946668']")))
-    text_message_txt = text_message.text
-    print(text_message_txt)
+    # Получаю текст уведомления
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:
@@ -42,7 +45,6 @@ def open_lock(browser):
                 error_message = request.response.body.decode('utf-8')
                 print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
 #                pytest.fail()
-
 
 def test_open_lock(browser):
     open_lock(browser)

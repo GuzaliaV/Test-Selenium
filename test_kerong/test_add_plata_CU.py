@@ -1,8 +1,8 @@
-# добавление CU платы и проверка наличия карточки
+# Платы. Создание платы CU
 
-from test_func.test_func_add_plata_CU import add_card_CU
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
+from test_func.test_func_add_plata_CU import add_card_CU
 
 
 def test_add_card_CU(browser):

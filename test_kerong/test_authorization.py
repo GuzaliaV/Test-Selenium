@@ -34,7 +34,7 @@ def authorization(browser):
     login.send_keys(log_in)
 
     # ввести пароль
-    passw = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='outlined-adornment-password']")))
+    passw = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='Пароль']")))
     passw.send_keys(password)
 
     # клик по кнопке войти

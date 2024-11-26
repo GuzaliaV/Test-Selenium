@@ -1,14 +1,16 @@
-# Мoниторинг - Зона. Открытие одной ячейки
+# Мoниторинг. Зона. Открыть - одну ячейку
 
-import random
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+
 from config import name_zone_publ
-from browser_setup import browser
+
+from time import sleep
+import random
+from selenium.webdriver.common.keys import Keys
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
@@ -24,7 +26,7 @@ def open_lock_one(browser):
 
     # Открыть зону
     wait.until(EC.element_to_be_clickable((By.XPATH, f"//h2[text() = '{name_zone_publ}']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     lock_all = browser.find_elements(By.CLASS_NAME, "lock-item-container")
     closed_locks = []
@@ -55,15 +57,18 @@ def open_lock_one(browser):
 
         # Открыть
         browser.find_element(By.XPATH, "(//button[text()= 'Открыть'])[2]").click()
-        print("Открыта одна ячейка")
-        time.sleep(0.5)
 
-        text_message = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'notistack-snackbar']")))
-        text_message_txt = text_message.text
-        print(f"Текст уведомления: {text_message_txt}")
+        # Получаю текст уведомления
+        notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+        if notifications:
+            last_notification_text = notifications[-1].text
+            print(f"Текст уведомления: {last_notification_text}")
+
+        print("Открыта одна ячейка")
+        sleep(0.5)
 
         actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-        time.sleep(0.2)
+        sleep(0.2)
 
     else:
         if open_locks:
@@ -80,17 +85,21 @@ def open_lock_one(browser):
 
             # Открыть
             browser.find_element(By.XPATH, "(//button[text()= 'Открыть'])[2]").click()
-            time.sleep(0.5)
 
-            text_message1 = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'notistack-snackbar']")))
-            text_message_txt1 = text_message1.text
-            print(f"Текст уведомления: {text_message_txt1}")
+            # Получаю текст уведомления
+            notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+            if notifications:
+                last_notification_text = notifications[-1].text
+                print(f"Текст уведомления: {last_notification_text}")
+
+            sleep(0.5)
+
 
             actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            time.sleep(0.2)
+            sleep(0.2)
 
     click_empty_space(browser)
-    time.sleep(1)
+    sleep(1)
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:

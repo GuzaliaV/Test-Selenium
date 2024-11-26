@@ -1,13 +1,16 @@
-# Строка Поиск в разделе BU платы
+# Платы. Строка Поиска. СU платы
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import new_edit_name_CU
-from browser_setup import browser
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+
+from config import new_edit_name_CU
+
+from selenium.webdriver.common.keys import Keys
+from time import sleep
+
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
@@ -22,17 +25,17 @@ def search_plata_CU(browser):
 
     # Клик по Платы
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@class='table-item'])[2]"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # Клик на CU-Платы
     wait.until(EC.element_to_be_clickable((By.XPATH, "//h4[text() = 'CU - платы']"))).click()
-    time.sleep(0.3)
+    sleep(0.3)
 
     # строка поиска
     searc = wait.until(EC.element_to_be_clickable((By.XPATH, "// input[@id = 'outlined-basic']")))
     searc.send_keys(new_edit_name_CU)
-    print(f"Искомое значение '{new_edit_name_CU}'")
-    time.sleep(1)
+    print(f"Поиск по значению '{new_edit_name_CU}'")
+    sleep(1)
 
     WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
     rows = browser.find_elements(By.CSS_SELECTOR, "tbody tr")
@@ -43,12 +46,12 @@ def search_plata_CU(browser):
         if h2_text == new_edit_name_CU:
             print(f"'{h2_text}' найден")
             actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            time.sleep(0.3)
+            sleep(0.3)
             return True
         else:
             print(f"Значение не найдено")
             actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            time.sleep(0.1)
+            sleep(0.1)
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:

@@ -1,4 +1,4 @@
-# Добавление клиента и проверка наличия карточки
+# Клиенты. Создать карточку клиента
 
 from test_func.test_func_add_client import add_client
 from test_kerong.test_authorization import authorization

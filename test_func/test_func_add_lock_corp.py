@@ -1,20 +1,24 @@
-# добавление замков и проверка наличия
+# Замки и ячейки. Создание набора замков для корп зоны
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
-from selenium.webdriver import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from selenium.webdriver import Keys
+
+from config import name_BU_text, name_CU_text, name_zone_corp, num_from_corp, num_to_corp, name_lock_corp
 from test_func.func_search import search_line
-from config import name_lock_text, name_BU_text, name_CU_text, name_zone_private, num_from_private, num_to_private, count_lock, star_num_plata, stop_num_plata, count_lock_plata, start_num_lock, stop_num_lock
-from browser_setup import browser
+
+from time import sleep
+
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
     browser.execute_script("arguments[0].scrollIntoView(true);", element)
-    time.sleep(0.5)
+    sleep(0.5)
 
-def add_lock(browser):
+def add_lock_corp(browser):
     wait = WebDriverWait(browser, 20)
 
     # Клик на Справочники
@@ -26,30 +30,22 @@ def add_lock(browser):
     # Клик на Добавить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class = 'UIbutton']"))).click()
 
-    # Выбрать зону
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[1]"))).click()
-    zona = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_zone_private} [{num_from_private}-{num_to_private}]')]")))
-    browser.execute_script("arguments[0].scrollIntoView(true);", zona)
-    zona.click()
-
-    # Ввести наименование
-    name_lock = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
-    name_lock.send_keys(name_lock_text)
-
     # Стартовый номер
     start_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[3]")))
     start_num.send_keys(Keys.CONTROL, "a")
-    start_num.send_keys(start_num_lock)
+    start_num.send_keys(num_from_corp)
+    sleep(1)
 
     # Конечный номер
     stop_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[4]")))
     stop_num.send_keys(Keys.CONTROL, "a")
-    stop_num.send_keys(stop_num_lock)
+    stop_num.send_keys(num_to_corp)
+    sleep(1)
 
     # Колво ячеек
-    count_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[5]")))
-    count_num.send_keys(Keys.CONTROL, "a")
-    count_num.send_keys(count_lock)
+    #count_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[5]")))
+    #count_num.send_keys(Keys.CONTROL, "a")
+    #count_num.send_keys(count_lock_corp)
 
     # Выбрать BU плату
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[2]"))).click()
@@ -62,37 +58,51 @@ def add_lock(browser):
     c = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_CU_text}')]")))
     browser.execute_script("arguments[0].scrollIntoView(true);", c)
     browser.execute_script("arguments[0].click();", c)
+    sleep(1)
 
     # Стартовый номер на плате
     start_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[7]")))
     start_num.send_keys(Keys.CONTROL, "a")
-    start_num.send_keys(star_num_plata)
+    start_num.send_keys(str(int(num_from_corp)-1))
+    sleep(1)
 
     # Конечный номер на плате
     stop_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[8]")))
     stop_num.send_keys(Keys.CONTROL, "a")
-    stop_num.send_keys(stop_num_plata)
+    stop_num.send_keys(str(int(num_to_corp)-1))
+    sleep(1)
 
     # Колво плате
-    count_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[9]")))
-    count_num.send_keys(Keys.CONTROL, "a")
-    count_num.send_keys(count_lock_plata)
+    #count_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[9]")))
+    #count_num.send_keys(Keys.CONTROL, "a")
+    #count_num.send_keys(count_plata_corp)
+
+    # Ввести наименование
+    name_lock = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+    name_lock.send_keys(name_lock_corp)
+
+    # Выбрать зону
+    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[1]"))).click()
+    zona = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_zone_corp} [{num_from_corp}-{num_to_corp}]')]")))
+    browser.execute_script("arguments[0].scrollIntoView(true);", zona)
+    zona.click()
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(1)
-    print("Набор замков создан")
+    sleep(1)
+    print(f"Набор замков '{name_lock_corp}' создан")
 
     # Получаю текст уведомление
-    text_message = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'notistack-snackbar']")))
-    text_message_txt = text_message.text
-    print(f"Текст уведомления: {text_message_txt}")
-    time.sleep(0.1)
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
-    if search_line(browser, name_lock_text):
+    if search_line(browser, name_lock_corp):
         print()
     else:
-        print(f"{name_lock_text} - не найден.")
+        print(f"{name_lock_corp} - не найден.")
 
     for request in browser.requests:
         if request.response:
@@ -101,5 +111,5 @@ def add_lock(browser):
                 print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
  #               pytest.fail()
 
-def test_add_lock(browser):
-    add_lock(browser)
+def test_add_lock_corp(browser):
+    add_lock_corp(browser)

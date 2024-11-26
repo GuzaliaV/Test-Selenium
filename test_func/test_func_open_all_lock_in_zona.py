@@ -1,11 +1,14 @@
-# Мoниторинг - Зона. Открытие всех ячеек
+# Мoниторинг. Зона. Открыть - По статусу - Все ячейки
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from config import name_zone_publ
-from browser_setup import browser
+
+from time import sleep
+
 
 def open_lock_all(browser):
     print("Test open_lock_all")
@@ -35,11 +38,11 @@ def open_lock_all(browser):
     # Открыть
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[text()= 'Открыть'])[2]"))).click()
 
-    # Получаю текст уведомление
-    text_message = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'notistack-snackbar']")))
-    text_message_txt = text_message.text
-    print(f"Текст уведомления: {text_message_txt}")
-    time.sleep(0.1)
+    # Получаю текст уведомления
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:

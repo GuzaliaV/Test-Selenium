@@ -1,12 +1,14 @@
-# добавление типа идентиф и проверка наличия
+# Тип идентификатора. Создание карточки
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from test_func.func_search import search_line
 from config import name_type_identif
-from browser_setup import browser
+
+from time import sleep
 
 
 def add_type_ident(browser):
@@ -27,8 +29,15 @@ def add_type_ident(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(0.2)
-    print(f"Карточка '{name_type_identif}' создана")
+    sleep(0.2)
+    print(f"Создан тип идентификатора со значением '{name_type_identif}'")
+
+    # Получаю текст уведомление
+    browser.implicitly_wait(10)
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Тексn уведомления: {last_notification_text}")
 
 
     # проверка наличия созданной карточки

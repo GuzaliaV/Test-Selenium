@@ -1,13 +1,15 @@
-# Мoниторинг - Зона. Открытие занятых ячеек
+# Мoниторинг. Зона. Открыть - По статусу - Занятые ячейки
 
-import time
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import name_zone_publ
-from browser_setup import browser
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+
+from config import name_zone_publ
+
+from selenium.webdriver.common.keys import Keys
+from time import sleep
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
@@ -21,17 +23,17 @@ def open_lock_rent(browser):
 
     # открыть мониторинг
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # Открыть зону
     wait.until(EC.element_to_be_clickable((By.XPATH, f"//h2[text() = '{name_zone_publ}']"))).click()
-    time.sleep(0.1)
+    sleep(0.1)
 
     # количество ячеек
     cells = browser.find_elements(By.CLASS_NAME, 'lock-item-container')
     cell_count = len(cells)
     print(f'Общее количество ячеек: {cell_count}')
-    time.sleep(0.1)
+    sleep(0.1)
 
     lock_all = browser.find_elements(By.CLASS_NAME, "lock-item-container")
     locks_num = 0
@@ -52,19 +54,19 @@ def open_lock_rent(browser):
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//li[text() = 'Занятые']"))).click()
                 wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[text()= 'Открыть'])[2]"))).click()
                 actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-                time.sleep(0.2)
+                sleep(0.2)
 
-                # Получаем текст уведомления
-                text_message = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'notistack-snackbar']")))
-                text_message_txt = text_message.text
-                print(f"Текст уведомления: {text_message_txt}")
-                time.sleep(0.1)
+                # Получаю текст уведомления
+                notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+                if notifications:
+                    last_notification_text = notifications[-1].text
+                    print(f"Текст уведомления: {last_notification_text}")
 
         except:
             pass
 
     click_empty_space(browser)
-    time.sleep(1)
+    sleep(1)
 
     # Проверяем, есть ли занятые ячейки
     if locks_num == 0:

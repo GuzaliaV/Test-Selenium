@@ -1,15 +1,17 @@
-# фильтр в идентификаторах
+# Идентификаторы. Фильтр
 
-import time
-from selenium.common import TimeoutException, ElementClickInterceptedException
+from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from browser_setup import browser
+from selenium.common import TimeoutException, ElementClickInterceptedException
+
+from time import sleep
+
 
 def scroll_to_element(browser, element):
     browser.execute_script("arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", element)
-    time.sleep(0.3)
+    sleep(0.3)
 
 def click_element(browser, locator):
     try:
@@ -44,7 +46,14 @@ def filter_identif(browser):
 
     # Применить
     click_element(browser, (By.XPATH, "//button[text() = 'Применить']"))
-    time.sleep(0.2)
+
+    # Получаю текст уведомления
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
+
+    sleep(0.2)
 
     # проверка найденного результата
     try:

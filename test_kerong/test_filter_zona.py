@@ -1,7 +1,7 @@
-# фильтр в зоне
+# Зоны. Фильтр
 
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
 from test_func.test_func_filter_zona import filter_zona
 
 

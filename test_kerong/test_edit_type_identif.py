@@ -1,8 +1,8 @@
-# добавление типа идентиф , редактирование
+# Идентификаторы. Добавление идентиф и редактирование
 
-from test_func.test_func_edit_type_identif import edit_type_ident
-from test_kerong.test_authorization import authorization
 from browser_setup import browser
+from test_kerong.test_authorization import authorization
+from test_func.test_func_edit_type_identif import edit_type_ident
 
 
 def test_edit_type_ident(browser):

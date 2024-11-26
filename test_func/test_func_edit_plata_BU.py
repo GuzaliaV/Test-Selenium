@@ -1,17 +1,20 @@
-# редактирование карточки BU и проверка наличия карточки
+# Платы. Редактирование платы BU
 
-import time
-from selenium.webdriver import Keys
+from browser_setup import browser
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from config import edit_name_BU, edit_ip_plata, new_edit_name_BU, new_edit_ip_plata
-from browser_setup import browser
+
+from selenium.webdriver import Keys
+from time import sleep
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
     browser.execute_script("arguments[0].scrollIntoView(true);", element)
-    time.sleep(0.1)
+    sleep(0.1)
 
 def edit_card_BU(browser):
     wait = WebDriverWait(browser, 10)
@@ -42,8 +45,15 @@ def edit_card_BU(browser):
 
     # Сохранить карточку
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    time.sleep(1)
-    print(f"Карточка '{edit_name_BU}' создана")
+    sleep(0.2)
+    print(f"Плата '{edit_name_BU}' создана")
+
+    # Получаю текст уведомления
+    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+    if notifications:
+        last_notification_text = notifications[-1].text
+        print(f"Текст уведомления: {last_notification_text}")
+
 
     def edit_card_BU(browser):
         # поиск карточки платы
@@ -58,12 +68,12 @@ def edit_card_BU(browser):
             if h2_text == edit_name_BU:
                 # открыть плату с наименование name_BU_text
                 browser.find_element(By.XPATH, f"//h2[text()= '{edit_name_BU}']").click()
-                print(f"Карточка '{edit_name_BU}' найдена")
-                time.sleep(0.1)
+                print(f"Плата '{edit_name_BU}' найдена")
+                sleep(0.1)
 
                 # редактировать
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Редактировать']"))).click()
-                time.sleep(0.1)
+                sleep(0.1)
 
                 # изменить наименование
                 text_name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
@@ -77,14 +87,21 @@ def edit_card_BU(browser):
 
                 # сохранить
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-                time.sleep(0.1)
+
+                # Получаю текст уведомления
+                notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+                if notifications:
+                    last_notification_text = notifications[-1].text
+                    print(f"Текст уведомления: {last_notification_text}")
+
+                sleep(0.1)
                 return True
 
         # если карточка не найдена, след старница
         try:
             next_page = browser.find_element(By.XPATH, "//button[@aria-label = 'Go to next page']")
             next_page.click()
-            time.sleep(0.1)
+            sleep(0.1)
             return edit_card_BU(browser)
         except:
             print("Не найден на всех страницах.")
