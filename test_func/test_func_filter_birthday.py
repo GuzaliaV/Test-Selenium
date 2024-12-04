@@ -4,7 +4,7 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from termcolor import cprint
 from datetime import datetime, timedelta
 from time import sleep
 import random
@@ -26,6 +26,8 @@ def generate_random_birthday_range():
 
 def filter_birthday(browser):
     wait = WebDriverWait(browser, 10)
+
+    cprint("Клиенты. Фильтр по дате рождения / test_func_filter_birthday", "yellow")
 
     # Клик по кнопке Клиенты
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Клиенты']"))).click()

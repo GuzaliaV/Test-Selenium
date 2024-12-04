@@ -1,16 +1,13 @@
 import random
 
-
 # авторизация
 log_in = "admin"
-password = "123"
-servername = "192.168.25.137"
+password = "masterkey"
+servername = "192.168.25.153"
 port_auth = "9777"
 
-############################################
-
 # Создание соединения керонг апи
-address_input = "192.168.25.137"
+address_input = "192.168.25.153"
 port_api = "9991"
 
 # Новый IP при редактировании карточки kerong api
@@ -23,7 +20,7 @@ address_input_2 = f"192.168.25.{random.randint(100, 999)}"
 port_api_2 = "9991"
 new_address_input_2 = f"192.168.25.{random.randint(100, 999)}"
 
-############################################
+#
 
 # Создание платы BU
 #name_BU_text = f"BU_тест_{random.randint(100, 999)}"
@@ -37,11 +34,11 @@ edit_ip_plata = f"192.168.25.{random.randint(100, 999)}"
 new_edit_name_BU = "Новая_плата_BU_тест"
 new_edit_ip_plata = f"192.168.25.{random.randint(100, 999)}"
 
-############################################
+
 # Создание платы CU
-#name_CU_text = f"CU_тест_{random.randint(100, 999)}"
+# name_CU_text = f"CU_тест_{random.randint(100, 999)}"
 name_CU_text = "CU_test"
-number_in_chain = f"{random.randint(0, 9)}"
+number_in_chain = "0"
 
 # Создание и редактирование платы CU
 edit_name_CU = f"Новая_CU_{random.randint(10, 99)}"
@@ -50,7 +47,6 @@ edit_number_in_chain = f"{random.randint(0, 9)}"
 new_edit_name_CU = f"Новая_CU_{random.randint(10, 99)}"
 new_edit_number_in_chain = f"{random.randint(0, 9)}"
 
-############################################
 
 # Создание зоны публичной
 name_zone_publ = "Зона_тест_публичная"
@@ -58,15 +54,6 @@ num_from_publ = "1"
 num_to_publ = "5"
 # Создание набора замков
 name_lock_publ = "Замки_тест_публ"
-
-
-# Создание и редактирование публичной зоны
-edit_name_zone_publ = f"Зона_тест_публ_{random.randint(10, 99)}"
-edit_num_from_publ = "1"
-edit_num_to_publ = "20"
-# Редактирование
-new_edit_name_zone_publ = f"Зона_тест_публ_изменена_{random.randint(10, 99)}"
-
 
 
 # Создание зоны приватной
@@ -78,13 +65,12 @@ name_lock_priv = "Замки_тест_прив"
 
 
 # Создание зоны корпоративной
-name_zone_corp = "Зона_тест_корпоративная"
+name_zone_corp = "Зона_тест_корп"
 num_from_corp = "11"
 num_to_corp = "15"
 # Создание набора замков
 name_lock_corp = "Замки_тест_корп"
 
-############################################
 
 # Создание и удаление набора замков
 zona_2 = f"Зона_тест_{random.randint(10, 99)}"
@@ -93,26 +79,13 @@ num_to_2 = "48"
 # Создание набора замков
 new_name_lock = f"Замки_тест_{random.randint(100, 999)}"
 
-##############################################
 
 # Создание типа идентификатора
-name_type_identif = "Тип идентификатора_тест"
+name_type_identif = f"ТИ_тест_{random.randint(10, 99)}"
 
 # Создание идентификатор
-name_identif = "Идентификатор_тест"
+name_identif = f"Идентификатор_тест_{random.randint(10, 99)}"
 
-##############################################
-
-# Редактирование типа идентификатора
-edit_type_identif = f"ТИ_тест_{random.randint(10, 99)}"
-new_edit_type_identif = "ТИ_тест_изменен"
-
-# Редактирование идентификатора
-edit_identif = f"Идент_тест_{random.randint(10, 99)}"
-new_edit_identif = f"Идент_тест_изменен_{random.randint(10, 99)}"
-
-
-#
 
 
 

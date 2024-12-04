@@ -5,21 +5,22 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
+from selenium.webdriver.common.keys import Keys
 from config import name_zone_publ
-
+from termcolor import cprint
 from time import sleep
 import random
-from selenium.webdriver.common.keys import Keys
+
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
     actions.move_by_offset(0, 0).click().perform()
 
 def open_lock_one(browser):
-    print("Test open_lock_one_in_zona")
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
     actions = ActionChains(browser)
+
+    cprint("Мoниторинг. Зона. Открыть - одну ячейку / test_func_open_lock_one_in_zona", "yellow")
 
     # открыть мониторинг
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
@@ -44,7 +45,7 @@ def open_lock_one(browser):
             open_locks.append(lock_number)
 
     if closed_locks:
-        lock_to_open = random.choice(closed_locks)
+        lock_to_closed = random.choice(closed_locks)
 
         # Нажимаем Открыть
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Открыть']"))).click()
@@ -53,22 +54,19 @@ def open_lock_one(browser):
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'ячейку']"))).click()
 
         # Вводим номер ячейки
-        wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id= 'outlined-basic'])[2]"))).send_keys(lock_to_open)
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Номер ячейки']"))).send_keys(lock_to_closed)
 
         # Открыть
         browser.find_element(By.XPATH, "(//button[text()= 'Открыть'])[2]").click()
+        actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+        sleep(2)
+        print(f"Открыта ячейка '{lock_to_closed}'")
 
         # Получаю текст уведомления
         notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
         if notifications:
             last_notification_text = notifications[-1].text
             print(f"Текст уведомления: {last_notification_text}")
-
-        print("Открыта одна ячейка")
-        sleep(0.5)
-
-        actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-        sleep(0.2)
 
     else:
         if open_locks:
@@ -81,10 +79,13 @@ def open_lock_one(browser):
             wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'ячейку']"))).click()
 
             # Вводим номер открытого замка
-            wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id= 'outlined-basic'])[2]"))).send_keys(lock_to_open)
+            wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Номер ячейки']"))).send_keys(lock_to_open)
 
             # Открыть
             browser.find_element(By.XPATH, "(//button[text()= 'Открыть'])[2]").click()
+            actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+            sleep(2)
+            print(f"Открыта ячейка '{lock_to_open}'")
 
             # Получаю текст уведомления
             notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
@@ -92,14 +93,7 @@ def open_lock_one(browser):
                 last_notification_text = notifications[-1].text
                 print(f"Текст уведомления: {last_notification_text}")
 
-            sleep(0.5)
-
-
-            actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            sleep(0.2)
-
     click_empty_space(browser)
-    sleep(1)
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:
@@ -108,7 +102,6 @@ def open_lock_one(browser):
                 error_message = request.response.body.decode('utf-8')
                 print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
                 print()
- #               pytest.fail()
 
 
 def test_open_lock_one(browser):

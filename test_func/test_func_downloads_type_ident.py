@@ -4,11 +4,13 @@ from browser_setup import browser
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-
 from time import sleep
+from termcolor import cprint
 
 def downloads_type_ident(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Тип идентификатора. Загрузка файла / test_func_downloads_type_ident", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()

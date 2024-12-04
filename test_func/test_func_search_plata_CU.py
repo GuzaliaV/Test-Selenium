@@ -5,9 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
-from config import new_edit_name_CU
-
+from termcolor import cprint
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 
@@ -18,7 +16,9 @@ def click_empty_space(browser):
 
 def search_plata_CU(browser):
     actions = ActionChains(browser)
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Платы. Строка Поиска. СU платы / test_func_search_plata_CU", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -29,36 +29,44 @@ def search_plata_CU(browser):
 
     # Клик на CU-Платы
     wait.until(EC.element_to_be_clickable((By.XPATH, "//h4[text() = 'CU - платы']"))).click()
-    sleep(0.3)
+    sleep(2)
 
-    # строка поиска
-    searc = wait.until(EC.element_to_be_clickable((By.XPATH, "// input[@id = 'outlined-basic']")))
-    searc.send_keys(new_edit_name_CU)
-    print(f"Поиск по значению '{new_edit_name_CU}'")
-    sleep(1)
+    # данные первой строки в списке
+    WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
 
     WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
     rows = browser.find_elements(By.CSS_SELECTOR, "tbody tr")
-    for row in rows:
-        h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
-        h2_text = h2_element.text.strip()
+    if rows:
 
-        if h2_text == new_edit_name_CU:
-            print(f"'{h2_text}' найден")
-            actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            sleep(0.3)
-            return True
-        else:
-            print(f"Значение не найдено")
-            actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            sleep(0.1)
+        name = rows[0].find_element(By.CSS_SELECTOR, "td:nth-child(1) h2").text
+
+        # строка поиска
+        search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Поиск']")))
+        search.send_keys(name)
+        sleep(1)
+        print(f"Поиск по значению '{name}'")
+
+        WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
+        rows = browser.find_elements(By.CSS_SELECTOR, "tbody tr")
+        for row in rows:
+            h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
+            h2_text = h2_element.text.strip()
+
+            if h2_text == name:
+                print(f"'{h2_text}' найден")
+                actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+                return True
+            else:
+                print(f"Значение не найдено")
+                actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:
         if request.response:
             if request.response.status_code not in {200, 101}:
                 error_message = request.response.body.decode('utf-8')
-                print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
+                print(
+                    f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
 
 def test_search_plata_CU(browser):
     search_plata_CU(browser)

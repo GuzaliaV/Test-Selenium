@@ -1,18 +1,20 @@
 # Мониторинг. Зона. Строка поиска
-from fontTools.merge.util import first
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from browser_setup import browser
 from selenium.webdriver.common.action_chains import ActionChains
-
+from termcolor import cprint
 from time import sleep
 from selenium.webdriver.common.keys import Keys
 
 
 def search_monitoring(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
     actions = ActionChains(browser)
+
+    cprint("Мониторинг. Зона. Строка поиска / test_func_search_monitoring", "yellow")
 
     # Нажимаем на кнопку "Мониторинг"
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
@@ -43,15 +45,17 @@ def search_monitoring(browser):
             print(f"В '{zone_name}' нумерация ячеек с '{first_num[7:]}' по '{last_num[7:]}'")
 
             # строка поиска
-            search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
+            search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Поиск по номеру замка']")))
             search.send_keys(last_num[7:])
-            print(f"Поиск по значению '{last_num[7:]}'")
+            print(f"Поиск по номеру ячейки '{last_num[7:]}'")
             sleep(1)
 
             cells = browser.find_elements(By.CLASS_NAME, 'lock-item-container')
             a = cells[-1].find_element(By.CLASS_NAME, 'title').text[7:]
             if a == last_num[7:]:
-                print(f"'{a}' - найден")
+                print(f"'Ячейка {a}' найдена")
+                actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+                sleep(0.2)
             break
         else:
             print(f'В зоне "{zone_name}" замков нет')
@@ -68,7 +72,7 @@ def search_monitoring(browser):
     # Перебор всех перехваченных запросов
     for request in browser.requests:
         if request.response:
-            if request.response.status_code not in {200, 101}:
+            if request.response.status_code not in {200, 101, 201}:
                 error_message = request.response.body.decode('utf-8')
                 print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
 

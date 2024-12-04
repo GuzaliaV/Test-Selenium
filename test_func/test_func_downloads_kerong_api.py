@@ -4,11 +4,13 @@ from browser_setup import browser
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-
+from termcolor import cprint
 from time import sleep
 
 def downloads_kerong(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Kerong Api. Загрузка файла / test_func_downloads_kerong_api", "yellow")
 
     # клик на настройки
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Настройки']"))).click()

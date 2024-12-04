@@ -5,8 +5,9 @@ from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from termcolor import cprint
 from time import sleep
+
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
@@ -14,7 +15,9 @@ def scroll_to_element(browser, element):
     sleep(0.1)
 
 def filter_zona(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Зоны. Фильтр / test_func_filter_zona", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -26,7 +29,7 @@ def filter_zona(browser):
     # клик на кнопку Фильтр
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "filter-button"))).click()
     sleep(0.1)
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать режим доступа']"))).click()
     sleep(0.1)
 
     # выбрать режим доступа Публичный
@@ -55,7 +58,7 @@ def filter_zona(browser):
                 h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(2) h2")
                 h2_text1 = h2_element.text.strip()
                 if h2_text1 == 'Публичный':
-                    print(f"{h2_text1} - данный тип платы найден")
+                    print(f"'{h2_text1}' - данный режим доступа найден")
                     found = True
                     break
             except Exception:
@@ -76,7 +79,7 @@ def filter_zona(browser):
     # клик на кнопку Фильтр
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "filter-button"))).click()
     sleep(0.1)
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать режим доступа']"))).click()
     sleep(0.1)
 
     # выбрать режим доступа Приватный
@@ -98,13 +101,13 @@ def filter_zona(browser):
                 h2_text2 = h2_element.text.strip()
 
                 if h2_text2 == 'Приватный':
-                    print(f"{h2_text2} - данный тип платы найден")
+                    print(f"{h2_text2} - данный режим доступа найден")
                     found = True
                     break
             except Exception:
                 continue
         if not found:
-            print(f"{h2_text2} - значение не найдено")
+            print(f"'{h2_text2}' - значение не найдено")
     except TimeoutException:
         print("Нет значений")
 
@@ -119,7 +122,7 @@ def filter_zona(browser):
     # клик на кнопку Фильтр
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "filter-button"))).click()
     sleep(0.1)
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать режим доступа']"))).click()
     sleep(0.1)
 
     # выбрать режим доступа Корпоративный
@@ -147,13 +150,13 @@ def filter_zona(browser):
                 h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(2) h2")
                 h2_text3 = h2_element.text.strip()
                 if h2_text3 == 'Корпоративный':
-                    print(f"{h2_text3} - данный тип платы найден")
+                    print(f"{h2_text3} - данный режим доступа найден")
                     found = True
                     break
             except Exception:
                 continue
         if not found:
-            print(f"{h2_text3} - значение не найдено")
+            print(f"'{h2_text3}' - значение не найдено")
     except TimeoutException:
         print("Нет значений")
 

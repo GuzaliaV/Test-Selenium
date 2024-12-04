@@ -1,16 +1,15 @@
-# Клиенты. Открыть карточку клиента. Добавить доступ к ячейкам на корп.зону , по 'телефон + код'
+# Клиенты. Открыть карточку клиента. Добавить доступ к ячейкам на корп.зону, по 'телефон + код'
 
 
 from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from config import name_zone_corp, num_from_corp, num_to_corp
-
 from time import sleep
 import random
 from datetime import datetime
+from termcolor import cprint
 
 
 def scroll_to_element(browser, element):
@@ -21,54 +20,45 @@ def scroll_to_element(browser, element):
 def add_corp_rent_phone_in_client(browser):
     wait = WebDriverWait(browser, 10)
 
+    cprint("Клиенты. Открыть карточку клиента. Добавить доступ к ячейкам на корп.зону, по 'телефон + код' / test_func_add_corp_rent_phone_in_client", "yellow")
+
     # открыть вкладку Доступ к ячейкам
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Доступ к ячейкам']"))).click()
-#    sleep(0.1)
 
     # добавить доступ
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Добавить доступ']"))).click()
-#    sleep(0.1)
 
     # Выбрать тип аренды
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
-#    sleep(0.1)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать тип аренды ']"))).click()
 
-    # по елефон+код
+    # по телефон+код
     wait.until(EC.element_to_be_clickable((By.XPATH, "//li[text() = 'По номеру телефона + код']"))).click()
-#    sleep(0.1)
 
     # указать код
-    code = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[6]")))
+    code = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Введите код']")))
     code.click()
     random_number = random.randint(1000, 9999)
     code.send_keys(random_number)
-#    sleep(0.1)
 
     # выбрать зону
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[2]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать зону']"))).click()
     zona = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text() = '{name_zone_corp} [{num_from_corp} - {num_to_corp}]']")))
     browser.execute_script("arguments[0].scrollIntoView(true);", zona)
     wait.until(EC.element_to_be_clickable(zona)).click()
-#    sleep(0.1)
 
     # Случайный номер ячейки из диапазона
     random_cell_number = random.randint(int(num_from_corp), int(num_to_corp))
     # ввести номер ячейки
-    num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[7]")))
+    num = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Введите номер ячейки']")))
     num.send_keys(str(random_cell_number))
-#    sleep(0.1)
 
     # Начало периода
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class = 'MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-slyssw']"))).click()
-#    sleep(0.1)
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class = 'MuiButtonBase-root MuiPickersDay-root MuiPickersDay-dayWithMargin MuiPickersDay-today css-9e71xu']"))).click()
-#    sleep(0.1)
 
     # Конец периода
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class = 'MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-slyssw'])[2]"))).click()
-#    sleep(0.1)
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class = 'MuiButtonBase-root MuiPickersDay-root MuiPickersDay-dayWithMargin MuiPickersDay-today css-9e71xu']"))).click()
-#    sleep(0.1)
 
     # начальное время
     input_element = WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.XPATH, "(//input[@class = 'MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1uvydh2'])[2]")))
@@ -81,13 +71,11 @@ def add_corp_rent_phone_in_client(browser):
     if hours == 24:
         hours = 0
     new_time = f"{hours:02}:{minutes:02}"
-#    sleep(0.1)
 
     # конечное время
     time_end = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@class = 'MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1uvydh2'])[4]")))
     time_end.click()
     time_end.send_keys(new_time)
-#    sleep(0.1)
 
     # сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()

@@ -4,15 +4,17 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from test_func.func_search import search_line
+from time import sleep
+from termcolor import cprint
 from config import name_type_identif
 
-from time import sleep
 
 
 def add_type_ident(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Тип идентификатора. Создание карточки / test_func_add_type_identif", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -24,12 +26,12 @@ def add_type_ident(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Добавить']"))).click()
 
     # Ввести наименование
-    name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+    name = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Наименование']")))
     name.send_keys(name_type_identif)
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    sleep(0.2)
+    sleep(1)
     print(f"Создан тип идентификатора со значением '{name_type_identif}'")
 
     # Получаю текст уведомление
@@ -37,8 +39,8 @@ def add_type_ident(browser):
     notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
     if notifications:
         last_notification_text = notifications[-1].text
-        print(f"Тексn уведомления: {last_notification_text}")
-
+        print(f"Текст уведомления: {last_notification_text}")
+        print()
 
     # проверка наличия созданной карточки
     if search_line(browser, name_type_identif):

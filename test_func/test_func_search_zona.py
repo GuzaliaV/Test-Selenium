@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
+from termcolor import cprint
 from time import sleep
 from selenium.webdriver.common.keys import Keys
 
@@ -15,7 +15,9 @@ def click_empty_space(browser):
 
 def search_zona(browser):
     actions = ActionChains(browser)
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Зоны. Строка Поиска / test_func_search_zona", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -30,7 +32,7 @@ def search_zona(browser):
     name_zona_txt = name_zona.text
 
     # строка поиска
-    search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
+    search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Поиск']")))
     search.send_keys(name_zona_txt)
     print(f"Поиск по значению '{name_zona_txt}'")
     sleep(1)
@@ -44,7 +46,6 @@ def search_zona(browser):
         if h2_text == name_zona_txt :
             print(f"'{h2_text}' найден")
             actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-            print("сброс поиска")
             sleep(1)
             return True
         else:

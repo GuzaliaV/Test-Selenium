@@ -4,13 +4,13 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-from config import name_lock_priv, name_BU_text, name_CU_text, name_zone_private, num_from_private, num_to_private
 from test_func.func_search import search_line
-
 from selenium.webdriver import Keys
-
 from time import sleep
+from termcolor import cprint
+from config import name_lock_priv, name_BU_text, name_CU_text, name_zone_private, num_from_private, num_to_private
+
+
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
@@ -18,7 +18,9 @@ def scroll_to_element(browser, element):
     sleep(0.5)
 
 def add_lock_priv(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Замки и ячейки. Создание набора замков для приватной зоны / test_func_add_lock_priv", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -29,14 +31,23 @@ def add_lock_priv(browser):
     # Клик на Добавить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class = 'UIbutton']"))).click()
 
+    # Выбрать зону
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать зону']"))).click()
+    zona = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_zone_private} [{num_from_private}-{num_to_private}]')]")))
+    browser.execute_script("arguments[0].scrollIntoView(true);", zona)
+    zona.click()
+
+    # Ввести наименование
+    name_lock = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Название набора']")))
+    name_lock.send_keys(name_lock_priv)
 
     # Стартовый номер
-    start_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[3]")))
+    start_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'Стартовый номер'])[1]")))
     start_num.send_keys(Keys.CONTROL, "a")
     start_num.send_keys(num_from_private)
 
     # Конечный номер
-    stop_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[4]")))
+    stop_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'Конечный номер'])[1]")))
     stop_num.send_keys(Keys.CONTROL, "a")
     stop_num.send_keys(num_to_private)
 
@@ -46,24 +57,24 @@ def add_lock_priv(browser):
     #count_num.send_keys(count_lock_priv)
 
     # Выбрать BU плату
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[2]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать KR-BU плату']"))).click()
     b = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_BU_text}')]")))
     browser.execute_script("arguments[0].scrollIntoView(true);", b)
     browser.execute_script("arguments[0].click();", b)
 
     # Выбрать CU плату
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[3]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать KR-CU плату']"))).click()
     c = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_CU_text}')]")))
     browser.execute_script("arguments[0].scrollIntoView(true);", c)
     browser.execute_script("arguments[0].click();", c)
 
     # Стартовый номер на плате
-    start_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[7]")))
+    start_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'Стартовый номер'])[2]")))
     start_num.send_keys(Keys.CONTROL, "a")
     start_num.send_keys(str(int(num_from_private)-1))
 
     # Конечный номер на плате
-    stop_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[8]")))
+    stop_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'Конечный номер'])[2]")))
     stop_num.send_keys(Keys.CONTROL, "a")
     stop_num.send_keys(str(int(num_to_private)-1))
 
@@ -71,16 +82,6 @@ def add_lock_priv(browser):
     #count_num = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[9]")))
     #count_num.send_keys(Keys.CONTROL, "a")
     #count_num.send_keys(count_plata_priv)
-
-    # Ввести наименование
-    name_lock = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
-    name_lock.send_keys(name_lock_priv)
-
-    # Выбрать зону
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[1]"))).click()
-    zona = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_zone_private} [{num_from_private}-{num_to_private}]')]")))
-    browser.execute_script("arguments[0].scrollIntoView(true);", zona)
-    zona.click()
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()

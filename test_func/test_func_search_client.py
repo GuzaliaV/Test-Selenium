@@ -8,11 +8,14 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common import TimeoutException
 from time import sleep
+from termcolor import cprint
 
 
 def search_client(browser):
     wait = WebDriverWait(browser, 10)
     actions = ActionChains(browser)
+
+    cprint("Клиенты. Строка Поиска: по телефону, имени, идентификатору / test_func_search_client", "yellow")
 
     # клик по кнопке Клиент
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Клиенты']"))).click()
@@ -30,10 +33,11 @@ def search_client(browser):
     ident = browser.find_element(By.CSS_SELECTOR, "td:nth-child(3) h2")
     ident_txt = ident.text
     print(f"Выбран клиент: {name_txt}, {mobile_txt}, {ident_txt}")
+    print()
 
     # поиск по имени
-    searc = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
-    searc.send_keys(name_txt)
+    search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Поиск']")))
+    search.send_keys(name_txt)
     sleep(1)
     print(f"Поиск по имени '{name_txt}'")
     try:
@@ -62,7 +66,7 @@ def search_client(browser):
 
 
     # поиск по телефону
-    searc.send_keys(mobile_txt)
+    search.send_keys(mobile_txt)
     sleep(1)
     print(f"Поиск по номеру '{mobile_txt}'")
     try:
@@ -94,7 +98,7 @@ def search_client(browser):
     if ident_txt == '':
         print("У клиента не выбран идентификатор")
     else:
-        searc.send_keys(ident_txt)
+        search.send_keys(ident_txt)
         sleep(1)
         print(f"Ищем по значению '{ident_txt}'")
         try:

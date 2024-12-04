@@ -5,8 +5,6 @@ from test_kerong.test_authorization import authorization
 from test_func.test_func_edit_identif import edit_ident
 
 
-
-
 def test_edit_ident(browser):
 
     #авторизация

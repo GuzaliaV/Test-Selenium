@@ -4,7 +4,7 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from termcolor import cprint
 import random
 from faker import Faker
 from selenium.webdriver import Keys
@@ -13,6 +13,8 @@ from time import sleep
 
 def edit_client(browser):
     wait = WebDriverWait(browser, 10)
+
+    cprint("Клиенты. Редактирование карточки клиента / test_func_edit_client", "yellow")
 
     # клик по кнопке Клиент
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Клиенты']"))).click()
@@ -30,7 +32,7 @@ def edit_client(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Редактировать']"))).click()
 
     # изменить имя
-    name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+    name = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Имя']")))
     name.click()
     name.send_keys(Keys.BACKSPACE * 30)
     fake = Faker("ru_RU")

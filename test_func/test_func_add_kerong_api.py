@@ -4,17 +4,17 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-
 from config import address_input, port_api
-
 from time import sleep
+from termcolor import cprint
 
 
 def add_kerong(browser):
     wait = WebDriverWait(browser, 10)
+
+    cprint("Kerong Api. Добавление соединения / test_func_add_kerong_api", "yellow")
 
     # клик на настройки
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Настройки']"))).click()
@@ -26,12 +26,12 @@ def add_kerong(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Добавить']"))).click()
 
     # ввести адрес
-    address = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id= 'outlined-basic'])[2]")))
+    address = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Адрес']")))
     address.send_keys(Keys.BACKSPACE * 5)
     address.send_keys(address_input)
 
     # ввести порт
-    port = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id= 'outlined-basic'])[3]")))
+    port = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Порт']")))
     port.send_keys(Keys.BACKSPACE * 5)
     port.send_keys(port_api)
     print(f"Создано соединение {address_input}")
@@ -49,6 +49,7 @@ def add_kerong(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class= 'UIbutton'])[4]"))).click()
+    sleep(0.5)
 
     # Получаю текст уведомление
     browser.implicitly_wait(10)

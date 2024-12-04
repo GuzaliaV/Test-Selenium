@@ -5,7 +5,7 @@ from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from termcolor import cprint
 from time import sleep
 
 
@@ -15,7 +15,9 @@ def scroll_to_element(browser, element):
     sleep(0.1)
 
 def filter_CU_plata(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Платы. Фильтры в CU платах / test_func_filter_CU_plata", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -34,10 +36,9 @@ def filter_CU_plata(browser):
     sleep(0.1)
 
     # выбрать тип платы
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать']"))).click()
     sleep(0.1)
-
-    # выбрать тип cu-48
+    # cu-48
     wait.until(EC.element_to_be_clickable((By.XPATH, "//li[text()='CU-48']"))).click()
     sleep(0.1)
 
@@ -79,7 +80,7 @@ def filter_CU_plata(browser):
     sleep(0.1)
 
     # номер в цепи
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[2]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'Выбрать'])[2]"))).click()
     sleep(0.1)
 
     # выбрать номер в цепи
@@ -124,7 +125,7 @@ def filter_CU_plata(browser):
     sleep(0.1)
 
     # BU-плата
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[3]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'Выбрать'])[3]"))).click()
     sleep(0.1)
 
     # выбрать плату

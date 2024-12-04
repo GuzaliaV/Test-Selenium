@@ -4,15 +4,16 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from config import new_address_input_1, address_input_1, port_api_1
 from test_func.func_search import search_line
-
 from selenium.webdriver.common.keys import Keys
 from time import sleep
+from termcolor import cprint
 
 def edit_kerong_not_synchr(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Kerong Api. Редактирование соединения, без синхронизации / test_func_edit_kerong_api_not_synchr", "yellow")
 
     # клик на настройки
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Настройки']"))).click()
@@ -24,14 +25,14 @@ def edit_kerong_not_synchr(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Добавить']"))).click()
 
     # ввести адрес
-    address = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id= 'outlined-basic'])[2]")))
+    address = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Адрес']")))
     address.send_keys(Keys.BACKSPACE * 5)
     address.send_keys(address_input_1)
     sleep(0.2)
     print(f"IP первого соединения '{address_input_1}'")
 
     # ввести порт
-    port = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id= 'outlined-basic'])[3]")))
+    port = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Порт']")))
     port.send_keys(Keys.BACKSPACE * 5)
     port.send_keys(port_api_1)
 
@@ -55,7 +56,7 @@ def edit_kerong_not_synchr(browser):
 
         # редактировать ip
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Редактировать']"))).click()
-        ip_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+        ip_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Адрес']")))
         sleep(0.1)
         ip_input.send_keys(Keys.BACKSPACE * 20)
         sleep(0.1)

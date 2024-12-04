@@ -4,14 +4,15 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from termcolor import cprint
 from config import name_zone_private
-
 from time import sleep
 
 
 def open_lock_in_lock(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Мониторинг. Зона. Открыть замок внутри ячейки / test_func_open_lock_in_lock", "yellow")
 
     # открыть мониторинг
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
@@ -28,7 +29,6 @@ def open_lock_in_lock(browser):
     for cell in cells:
         # номер ячейки
         cell_title = cell.find_element(By.CLASS_NAME, "title").text
-        print(cell_title, end=", ")
 
         # Замки со статусом "Закрыт"
         closed_icons = cell.find_elements(By.XPATH, ".//div[@aria-label='Закрыт']")
@@ -46,7 +46,8 @@ def open_lock_in_lock(browser):
                 notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
                 if notifications:
                     last_notification_text = notifications[-1].text
-                    print(f"Текст уведомления: {last_notification_text}, {cell_title}")
+                    print(f"Текст уведомления: {last_notification_text}")
+                    print(f"Открылась '{cell_title}'")
 
                 closed_opened = True
                 break
@@ -76,7 +77,8 @@ def open_lock_in_lock(browser):
                     notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
                     if notifications:
                         last_notification_text = notifications[-1].text
-                        print(f"Текст уведомления: {last_notification_text}, {cell_title}")
+                        print(f"Текст уведомления: {last_notification_text}")
+                        print(f"Повторно открылась '{cell_title}'")
 
                     break
                 except Exception as e:

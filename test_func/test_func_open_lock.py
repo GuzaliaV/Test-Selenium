@@ -4,13 +4,14 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from termcolor import cprint
 from config import name_zone_publ, num_from_publ, num_to_publ
-
 from time import sleep
 
 def open_lock(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Мониторинг. Открыть ячейку / test_func_open_lock", "yellow")
 
     # открыть мониторинг
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
@@ -19,18 +20,18 @@ def open_lock(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Открыть ячейку']"))).click()
 
     # выбрать зону
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать зону']"))).click()
 
     z = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_zone_publ} [{num_from_publ} - {num_to_publ}]')]")))
     browser.execute_script("arguments[0].scrollIntoView(true);", z)
     browser.execute_script("arguments[0].click();", z)
 
     # ввести номер ячейки
-    browser.find_element(By.XPATH, "//input[@id = 'outlined-basic']").send_keys(num_from_publ)
+    browser.find_element(By.XPATH, "//input[@id = 'Номер ячейки']").send_keys(num_from_publ)
 
     # открыть
     browser.find_element(By.XPATH, "//button[text()= 'Открыть']").click()
-    sleep(0.1)
+    sleep(3)
 
     # Получаю текст уведомления
     notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')

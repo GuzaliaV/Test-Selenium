@@ -5,16 +5,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
+from termcolor import cprint
 from config import new_address_input_2, address_input_2, port_api_2
 from test_func.func_search import search_line
-
 from time import sleep
 from selenium.webdriver.common.keys import Keys
 
 
 def edit_kerong_synchr(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Kerong Api. Редактирование соединения с синхронизацией / test_func_edit_kerong_api_synchr", "yellow")
 
     # Клик на настройки
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Настройки']"))).click()
@@ -26,13 +27,13 @@ def edit_kerong_synchr(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Добавить']"))).click()
 
     # Ввести адрес
-    address = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id='outlined-basic'])[2]")))
+    address = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Адрес']")))
     address.send_keys(Keys.BACKSPACE * 5)
     address.send_keys(address_input_2)
     print(f"IP второго соединения '{address_input_2}'")
 
     # Ввести порт
-    port = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id='outlined-basic'])[3]")))
+    port = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Порт']")))
     port.send_keys(Keys.BACKSPACE * 5)
     port.send_keys(port_api_2)
 
@@ -56,7 +57,7 @@ def edit_kerong_synchr(browser):
 
          # Редактировать IP
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Редактировать']"))).click()
-        ip_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id='outlined-basic'])[2]")))
+        ip_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='Адрес']")))
         sleep(0.1)
         ip_input.send_keys(Keys.BACKSPACE * 20)
         sleep(0.1)

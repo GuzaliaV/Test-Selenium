@@ -5,9 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
 from selenium.webdriver.common.keys import Keys
 from time import sleep
+from termcolor import cprint
 
 
 def click_empty_space(browser):
@@ -16,7 +16,9 @@ def click_empty_space(browser):
 
 def search_type_identif(browser):
     actions = ActionChains(browser)
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Типы идентификаторов. Строка Поиска / test_func_search_type_identif", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -30,7 +32,7 @@ def search_type_identif(browser):
     type_txt = type.text
 
     # строка поиска
-    search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
+    search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Поиск']")))
     search.send_keys(type_txt)
     sleep(1)
     print(f"Поиск по значению '{type_txt}'")

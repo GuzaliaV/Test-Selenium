@@ -4,11 +4,10 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-from config import edit_identif, new_edit_identif, new_edit_type_identif
-
 from selenium.webdriver import Keys
+import random
 from time import sleep
+from termcolor import cprint
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
@@ -16,7 +15,13 @@ def scroll_to_element(browser, element):
     sleep(0.5)
 
 def edit_ident(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Идентификаторы. Добавление идентиф и редактирование / test_func_edit_identif", "yellow")
+
+    # Редактирование идентификатора
+    edit_identif = f"Идент_тест_{random.randint(10, 99)}"
+    new_edit_identif = f"Идент_тест_изменен_{random.randint(10, 99)}"
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -28,22 +33,21 @@ def edit_ident(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Добавить']"))).click()
 
     # Выбрать тип идентиф
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
-
-    # Прокручиваем до нужного элемента типа идентификатора
-    option_to_select = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{new_edit_type_identif}']")))
-    browser.execute_script("arguments[0].scrollIntoView();", option_to_select)
-    sleep(0.5)
-    option_to_select.click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать тип идентификатора']"))).click()
+    type = browser.find_element(By.CSS_SELECTOR, "li:nth-child(1)")
+    sleep(0.1)
+    print(f"Тип идентификатора - '{type.text}'")
+    type.click()
 
     # Ввести значение
-    name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+    name = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Значение']")))
     name.send_keys(edit_identif)
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
     sleep(0.1)
-    print(f"Карточка '{edit_identif}' создана")
+    print(f"Значение - '{edit_identif}'. Карточка создана")
+    print()
 
     def edit_iden(browser):
         # поиск карточки
@@ -56,31 +60,34 @@ def edit_ident(browser):
             if h2_text == edit_identif:
                 # открыть карточку
                 browser.find_element(By.XPATH, f"//h2[text()= '{edit_identif}']").click()
-                #time.sleep(0.1)
 
                 # редактировать
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Редактировать']"))).click()
-                #time.sleep(0.1)
 
-                # изменить тип идентификатора
-                wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class = 'MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1nvf7g0']"))).click()
+                # редактирование
+                wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "svg[data-testid='ModeEditOutlinedIcon']"))).click()
+
+                # выбрать тип идентификатора
+                wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Тип идентификатора']"))).click()
+                type1 = browser.find_element(By.CSS_SELECTOR, "li:nth-child(2)")
+                sleep(0.1)
+                print(f"Тип идентификатора изменен - '{type1.text}'")
+                type1.click()
 
                 # Ввести наименование
-                name_zone = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+                name_zone = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Значение идентификатора']")))
                 name_zone.send_keys(Keys.BACKSPACE * 30)
                 name_zone.send_keys(new_edit_identif)
-                #time.sleep(0.1)
 
                 # Сохранить
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
+                sleep(1)
 
                 # Получаю текст уведомления
                 notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
                 if notifications:
                     last_notification_text = notifications[-1].text
                     print(f"Текст уведомления: {last_notification_text}")
-
-                sleep(0.1)
                 return True
 
         # если карточка не найдена, след старница
@@ -95,7 +102,7 @@ def edit_ident(browser):
 
     # проверка наличия созданной карточки
     if edit_iden(browser):
-        print(f"'{new_edit_identif}' - отредактирована")
+        print(f"Изменено значение - '{new_edit_identif}'")
     else:
         print(f"'{new_edit_identif}' - не найден")
 

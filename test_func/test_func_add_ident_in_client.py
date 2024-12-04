@@ -5,9 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
 from time import sleep
 from faker import Faker
+from termcolor import cprint
 
 
 def scroll_to_element(browser, element):
@@ -15,9 +15,11 @@ def scroll_to_element(browser, element):
     browser.execute_script("arguments[0].scrollIntoView(true);", element)
     sleep(0.1)
 
-def edit_ident_in_client(browser):
+def add_ident_in_client(browser):
     actions = ActionChains(browser)
     wait = WebDriverWait(browser, 10)
+
+    cprint("Клиенты. Добавить идентификатор в карточке Клиента / test_func_add_ident_in_client", "yellow")
 
     # клик по кнопке Клиент
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Клиенты']"))).click()
@@ -31,34 +33,35 @@ def edit_ident_in_client(browser):
 
         # открытие клиента и выбор идентифкатора
         if ident_text == '':
-            # имя клиента
-            name = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h4")
             actions.move_to_element(row).click().perform()
-            sleep(0.1)
 
             # Кнопка "Добавить"
             wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Добавить']"))).click()
             sleep(0.1)
 
+            # имя клиента
+            name = browser.find_element(By.XPATH, "//input[@id = 'Имя']")
+            value = name.get_attribute("value")
+
             # Выбрать ТИ
-            wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
+            wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='Выбрать тип идентификатора']"))).click()
             sleep(0.1)
             # Клик по идентификатору
             type = browser.find_element(By.CSS_SELECTOR, "li:nth-child(1)")
+            print(f"Выбран ТИ '{type.text}'")
             type.click()
-            sleep(0.1)
 
             # ввести значение идентификатора
-            ident = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[6]")))
+            ident = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Значение']")))
             ident.click()
             fake = Faker("ru_RU")
             ident_1 = fake.postcode()
             ident.send_keys(ident_1)
-            print(f"Выбран клиент '{name.text}. Клиенту привязан идентификатор '{type.text}. Со значением '{ident_1}'")
+            print(f"Клиенту '{value}' привязан идентификатор '{ident_1}'")
 
             # сохранить
             wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Сохранить']"))).click()
-            sleep(0.2)
+            sleep(0.5)
 
             # Получаю текст уведомление
             browser.implicitly_wait(10)
@@ -79,9 +82,9 @@ def edit_ident_in_client(browser):
         next_page = browser.find_element(By.XPATH, "//button[@aria-label='Go to next page']")
         next_page.click()
         # рекурсивный вызов функции
-        return edit_ident_in_client(browser)
+        return add_ident_in_client(browser)
     except:
         return False
 
-def test_edit_ident_in_client(browser):
-    edit_ident_in_client(browser)
+def test_add_ident_in_client(browser):
+    add_ident_in_client(browser)

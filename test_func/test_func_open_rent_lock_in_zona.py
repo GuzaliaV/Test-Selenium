@@ -5,9 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
+from termcolor import cprint
 from config import name_zone_publ
-
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 
@@ -17,9 +16,10 @@ def click_empty_space(browser):
 
 
 def open_lock_rent(browser):
-    print("Test open_lock_rent")
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
     actions = ActionChains(browser)
+
+    cprint("Мoниторинг. Зона. Открыть - По статусу - Занятые ячейки / test_func_open_rent_lock_in_zona", "yellow")
 
     # открыть мониторинг
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
@@ -30,10 +30,8 @@ def open_lock_rent(browser):
     sleep(0.1)
 
     # количество ячеек
-    cells = browser.find_elements(By.CLASS_NAME, 'lock-item-container')
-    cell_count = len(cells)
-    print(f'Общее количество ячеек: {cell_count}')
-    sleep(0.1)
+    cells = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "lock-item-container")))
+    print(f"Кол-во ячеек: {len(cells)}")
 
     lock_all = browser.find_elements(By.CLASS_NAME, "lock-item-container")
     locks_num = 0
@@ -50,11 +48,11 @@ def open_lock_rent(browser):
 
                 # Открываем ячейку по статусу Занятые
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'по статусу']"))).click()
-                wait.until(EC.element_to_be_clickable((By.ID, 'demo-simple-select-helper'))).click()
+                wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать статус ячейки']"))).click()
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//li[text() = 'Занятые']"))).click()
                 wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[text()= 'Открыть'])[2]"))).click()
                 actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-                sleep(0.2)
+                sleep(5)
 
                 # Получаю текст уведомления
                 notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
@@ -77,11 +75,10 @@ def open_lock_rent(browser):
     # Перебор всех перехваченных запросов
     for request in browser.requests:
         if request.response:
-            if request.response.status_code not in {200, 101}:
+            if request.response.status_code not in {200, 101, 201}:
                 error_message = request.response.body.decode('utf-8')
                 print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
-                print()
- #               pytest.fail()
+
 
 
 def test_open_lock_rent(browser):

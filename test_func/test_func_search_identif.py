@@ -4,9 +4,8 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from selenium.webdriver.common.action_chains import ActionChains
-
+from termcolor import cprint
 from time import sleep
 from selenium.webdriver.common.keys import Keys
 
@@ -17,7 +16,9 @@ def click_empty_space(browser):
 
 def search_identif(browser):
     actions = ActionChains(browser)
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Идентификаторы. Строка Поиска / test_func_search_identif", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -27,17 +28,16 @@ def search_identif(browser):
 
     # данные первого ТИ в списке
     WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
-    ident = browser.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
-    ident_txt = ident.text
 
-    # строка поиска
+
     WebDriverWait(browser, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))
     rows = browser.find_elements(By.CSS_SELECTOR, "tbody tr")
     if rows:
         name = rows[0].find_element(By.CSS_SELECTOR, "td:nth-child(1) h2").text
 
-        search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'outlined-basic']")))
-        search.send_keys(ident_txt)
+        # строка поиска
+        search = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Поиск']")))
+        search.send_keys(name)
         sleep(1)
         print(f"Поиск по значению '{name}'")
 
@@ -47,7 +47,7 @@ def search_identif(browser):
             h2_element = row.find_element(By.CSS_SELECTOR, "td:nth-child(1) h2")
             h2_text = h2_element.text.strip()
 
-            if h2_text == ident_txt:
+            if h2_text == name:
                 print(f"'{h2_text}' найден")
                 actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
                 return True

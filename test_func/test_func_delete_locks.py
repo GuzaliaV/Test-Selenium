@@ -4,9 +4,8 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from time import sleep
-
+from termcolor import cprint
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
@@ -14,7 +13,9 @@ def scroll_to_element(browser, element):
     sleep(0.1)
 
 def delete_locks(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Замки и ячейки. Удаление набора замков, первый в списке / test_func_delete_locks", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()

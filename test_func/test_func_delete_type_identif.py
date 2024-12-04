@@ -4,8 +4,9 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from time import sleep
+import random
+from termcolor import cprint
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
@@ -13,28 +14,29 @@ def scroll_to_element(browser, element):
     sleep(0.1)
 
 def delete_type_ident(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
 
-    type_ident = "ТИ удалить"
+    cprint("Типы идентификатора. Создание и удалиение ТИ / test_func_delete_type_identif", "yellow")
+
+    type_ident = f"ТИ удалить_{random.randint(100, 999)}"
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
 
     # Клик по идентиф
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@class='table-item'])[4]"))).click()
- #   sleep(0.1)
 
     # Клик по кнопке Добавить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Добавить']"))).click()
 
     # Ввести наименование
-    name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+    name = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Наименование']")))
     name.send_keys(type_ident)
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-#    sleep(0.2)
     print(f"Создан тип идентификатора со значением '{type_ident}'")
+    sleep(1)
 
     # Получаю текст уведомление
     browser.implicitly_wait(10)

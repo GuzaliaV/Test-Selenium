@@ -6,12 +6,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
 from time import sleep
+from termcolor import cprint
 
 def choose_indent_in_client(browser):
     actions = ActionChains(browser)
     wait = WebDriverWait(browser, 10)
+
+    cprint("Клиенты. Карточка клиента. Выбрать идентификатор / test_func_choose_indent_in_client", "yellow")
 
     # клик по кнопке Клиент
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Клиенты']"))).click()
@@ -39,7 +41,7 @@ def choose_indent_in_client(browser):
             ident = browser.find_element(By.CSS_SELECTOR, "tbody tr:first-child h2")
             print(f"Клиенту '{client_name}' привязан идентификатор '{ident.text}'")
             ident.click()
-            sleep(0.1)
+            sleep(1)
 
             # Получаю текст уведомление
             browser.implicitly_wait(10)

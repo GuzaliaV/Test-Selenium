@@ -5,19 +5,22 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from browser_setup import browser
-
+from termcolor import cprint
 
 def open_monitor(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Мониторинг. Открыть зону, получить список замков / test_func_open_zone_monitoring", "yellow")
 
     # Нажимаем на кнопку "Мониторинг"
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
 
     found_zone_with_locks = False
+
     # все зоны
     zones = browser.find_elements(By.XPATH, "//div/h2[@style]")
     zone_count = len(zones)
-    print(f'Всего зон: {zone_count}')
+    print(f"Всего зон: '{zone_count}'")
 
     for i in range(zone_count):
         zone = zones[i]

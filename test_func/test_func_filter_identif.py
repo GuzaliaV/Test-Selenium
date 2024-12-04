@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import TimeoutException, ElementClickInterceptedException
-
+from termcolor import cprint
 from time import sleep
 
 
@@ -21,7 +21,9 @@ def click_element(browser, locator):
         browser.execute_script("arguments[0].click();", button)
 
 def filter_identif(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Идентификаторы. Фильтр / test_func_filter_identif", "yellow")
 
     # Клик на Справочники
     click_element(browser, (By.XPATH, "//button[text()='Справочники']"))
@@ -37,7 +39,7 @@ def filter_identif(browser):
     click_element(browser, (By.CLASS_NAME, "filter-button"))
 
     # Вход в выпадающий список и его открытие
-    click_element(browser, (By.XPATH, "//div[@id='demo-simple-select-helper']"))
+    click_element(browser, (By.XPATH, "//div[@id='Выбрать']"))
 
     # выбрать ТИ
     button = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[text()= '{first_row_value}']")))
@@ -46,13 +48,6 @@ def filter_identif(browser):
 
     # Применить
     click_element(browser, (By.XPATH, "//button[text() = 'Применить']"))
-
-    # Получаю текст уведомления
-    notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
-    if notifications:
-        last_notification_text = notifications[-1].text
-        print(f"Текст уведомления: {last_notification_text}")
-
     sleep(0.2)
 
     # проверка найденного результата

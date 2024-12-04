@@ -4,27 +4,27 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from config import name_zone_private
-
 from time import sleep
 from datetime import datetime
+from termcolor import cprint
 
 
 
 def create_rent_in_cell(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Мониторинг. Зона. Выбрать свободную ячейку. Создать аренду / test_func_create_rent_in_cell", "yellow")
 
     # открыть мониторинг
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
 
     # выбрать зону
     wait.until(EC.element_to_be_clickable((By.XPATH, f"//h2[text() = '{name_zone_private}']"))).click()
-#    sleep(1)
 
     # Все ячейки
     cells = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "lock-item-container")))
-    print(f"Кол-во ячеек: {len(cells)}")
+    print(f"В зоне '{name_zone_private}' кол-во ячеек: {len(cells)}")
 
     free_cell = False
     for cell in cells:
@@ -41,25 +41,19 @@ def create_rent_in_cell(browser):
 
                 # клик на "создать аренду"
                 wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[text() = 'Создать аренду'])[2]"))).click()
-#                sleep(1)
 
                 # выбрать идентификатор
-                wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
+                wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать идентификатор']"))).click()
                 sleep(1)
                 wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "ul:nth-child(1) li"))).click()
-#                sleep(1)
 
                 # Начало периода
                 wait.until(EC.element_to_be_clickable((By.XPATH,"//button[@class = 'MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-slyssw']"))).click()
-#                sleep(1)
                 wait.until(EC.element_to_be_clickable((By.XPATH,"//button[@class = 'MuiButtonBase-root MuiPickersDay-root MuiPickersDay-dayWithMargin MuiPickersDay-today css-9e71xu']"))).click()
-#                sleep(1)
 
                 # Конец периода
                 wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class = 'MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-slyssw'])[2]"))).click()
-#                sleep(1)
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class = 'MuiButtonBase-root MuiPickersDay-root MuiPickersDay-dayWithMargin MuiPickersDay-today css-9e71xu']"))).click()
-#                sleep(1)
 
                 # начальное время
                 input_element = WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.XPATH,"(//input[@class = 'MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1uvydh2'])[2]")))
@@ -72,13 +66,11 @@ def create_rent_in_cell(browser):
                 if hours == 24:
                     hours = 0
                 new_time = f"{hours:02}:{minutes:02}"
-#                sleep(1)
 
                 # конечное время
                 time_end = wait.until(EC.element_to_be_clickable((By.XPATH,"(//input[@class = 'MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-1uvydh2'])[4]")))
                 time_end.click()
                 time_end.send_keys(new_time)
-#                sleep(1)
 
                 # Создать аренду
                 wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[text() = 'Создать аренду'])[3]"))).click()
@@ -96,7 +88,7 @@ def create_rent_in_cell(browser):
 
                 for request in browser.requests:
                     if request.response:
-                        if request.response.status_code not in {200, 101}:
+                        if request.response.status_code not in {200, 101, 201}:
                             error_message = request.response.body.decode('utf-8')
                             print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
                 free_cell = True
@@ -105,26 +97,8 @@ def create_rent_in_cell(browser):
                 print(f"Ошибка: {str(e)}")
 
     if not free_cell:
-        for cell in cells:
+        print("Все ячейки свободны")
 
-            # номер ячейки
-            cell_title = cell.find_element(By.CLASS_NAME, "title").text
-
-            print(f"Все ячейки заняты {cell_title}")
-
-            # Получаю текст уведомления
-            notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
-            if notifications:
-                last_notification_text = notifications[-1].text
-                print(f"Текст уведомления: {last_notification_text}, {cell_title}")
-
-            for request in browser.requests:
-                if request.response:
-                    if request.response.status_code not in {200, 101}:
-                        error_message = request.response.body.decode('utf-8')
-                        print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
-
-            break
 
 
 def test_create_rent_in_cell(browser):

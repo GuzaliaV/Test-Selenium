@@ -5,10 +5,9 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from config import name_zone_corp,num_from_corp, num_to_corp
-
 from datetime import datetime, timedelta
+from termcolor import cprint
 
 
 def scroll_to_element(browser, element):
@@ -19,18 +18,20 @@ def scroll_to_element(browser, element):
 def access_corporate_zone(browser):
     wait = WebDriverWait(browser, 10)
 
+    cprint("Клиенты. Открыть карточку клиента. Добавить доступ в корп зону / test_func_access_corporate_zone", "yellow")
+
     # открыть вкладку Доступ к зонам
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Доступ к зонам']"))).click()
 
-    # Добавить доступ
+    # добавить доступ
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Добавить доступ']"))).click()
 
     # выбрать идентификатор
-    wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'demo-simple-select-helper']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id= 'Выбрать идентификатор']"))).click()
     wait.until(EC.visibility_of_element_located((By.XPATH, "//ul/li"))).click()
 
     # выбрать зону
-    wait.until(EC.visibility_of_element_located((By.XPATH, "(//div[@id= 'demo-simple-select-helper'])[2]"))).click()
+    wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'Выбрать зону']"))).click()
     zona = wait.until(EC.element_to_be_clickable((By.XPATH, f"//li[contains(text(), '{name_zone_corp} [{num_from_corp} - {num_to_corp}]')]")))
     browser.execute_script("arguments[0].scrollIntoView(true);", zona)
     zona.click()

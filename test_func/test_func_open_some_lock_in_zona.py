@@ -5,22 +5,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-
-from config import name_zone_publ
-
-import random
 from selenium.webdriver.common.keys import Keys
+from config import name_zone_publ
+import random
 from time import sleep
-
+from termcolor import cprint
 
 def click_empty_space(browser):
     actions = ActionChains(browser)
     actions.move_by_offset(0, 0).click().perform()
 
 def open_lock_some(browser):
-    print("Test open_lock_some")
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
     actions = ActionChains(browser)
+
+    cprint("Мoниторинг. Зона. Открыть - несколько ячеек / test_func_open_some_lock_in_zona", "yellow")
 
     # открыть мониторинг
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Мониторинг']"))).click()
@@ -46,16 +45,18 @@ def open_lock_some(browser):
         # Нажимаем Открыть
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Открыть']"))).click()
 
-        # Выбираем "ячейку"
+        # Выбираем "несколько"
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'несколько']"))).click()
 
         # Номер ячейки C
-        wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id= 'outlined-basic'])[2]"))).send_keys(lock_start)
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'Открыть ячейки с']"))).send_keys(lock_start)
         # Номер ячейки ПО
-        wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id= 'outlined-basic'])[3]"))).send_keys(lock_stop)
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id= 'по']"))).send_keys(lock_stop)
 
         # Открыть
         browser.find_element(By.XPATH, "(//button[text()= 'Открыть'])[2]").click()
+        actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
+        sleep(3)
 
         # Получаю текст уведомления
         notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
@@ -63,15 +64,7 @@ def open_lock_some(browser):
             last_notification_text = notifications[-1].text
             print(f"Текст уведомления: {last_notification_text}")
 
-        sleep(1)
-
-        actions.send_keys(Keys.ESCAPE).send_keys(Keys.ESCAPE).perform()
-        sleep(0.1)
-
-        print(f"Открыты ячейки с {lock_start} по {lock_stop}")
-
-    click_empty_space(browser)
-    sleep(0.2)
+        print(f"Открыты ячейки с '{lock_start}' по '{lock_stop}'")
 
     # Перебор всех перехваченных запросов
     for request in browser.requests:
@@ -79,8 +72,7 @@ def open_lock_some(browser):
             if request.response.status_code not in {200, 101, 201}:
                 error_message = request.response.body.decode('utf-8')
                 print(f"Ошибка на URL: {request.url} с кодом: {request.response.status_code} Текст ошибки: {error_message}")
-                print()
- #               pytest.fail()
+
 
 def test_open_lock_some(browser):
     open_lock_some(browser)

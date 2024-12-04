@@ -4,8 +4,9 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from termcolor import cprint
 from time import sleep
+import random
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
@@ -13,36 +14,36 @@ def scroll_to_element(browser, element):
     sleep(0.2)
 
 def delete_ident(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
 
-    name_ident = "Идентификатор удалить"
+    cprint("Идентификаторы. Создание и удаление идентификатора / test_func_delete_identif", "yellow")
+
+    name_ident = f"Идентификатор_удалить_{random.randint(10, 99)}"
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
 
     # Клик по идентиф
     wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@class='table-item'])[5]"))).click()
-#    sleep(1)
 
     # Клик по кнопке Добавить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Добавить']"))).click()
 
     # Выбрать ТИ
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'demo-simple-select-helper']"))).click()
- #   sleep(1)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать тип идентификатора']"))).click()
+
     # Клик по идентификатору
     type = browser.find_element(By.CSS_SELECTOR, "li:nth-child(1)")
     type.click()
-#    sleep(1)
 
     # Ввести значение
-    name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+    name = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Значение']")))
     name.send_keys(name_ident)
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-#    sleep(1)
     print(f"Создан идентификатор со значением '{name_ident}'")
+    sleep(1)
 
     # Получаю текст уведомление
     browser.implicitly_wait(10)
@@ -74,12 +75,6 @@ def delete_ident(browser):
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Удалить']"))).click()
                 sleep(1)
 
-                # Получаю текст уведомления
-                notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
-                if notifications:
-                    last_notification_text = notifications[-1].text
-                    print(f"Текст уведомления: {last_notification_text}")
-
                 text_1 = "Подтвердите удаление привязанных к идентификатору данных"
                 text_message = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@id= 'notistack-snackbar']")))
                 text_message_txt = text_message.text
@@ -87,6 +82,12 @@ def delete_ident(browser):
                 if text_1.strip() == text_message_txt.strip():
                     wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[text()='Удалить'])[2]"))).click()
                     sleep(0.1)
+
+                # Получаю текст уведомления
+                notifications = browser.find_elements(By.CLASS_NAME, 'notistack-Snackbar')
+                if notifications:
+                    last_notification_text = notifications[-1].text
+                    print(f"Текст уведомления: {last_notification_text}")
 
                 # Проверка, что карточка удалена
                 rows_after_delete = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "tbody tr")))

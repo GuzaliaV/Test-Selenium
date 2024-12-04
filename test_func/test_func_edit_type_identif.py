@@ -1,14 +1,13 @@
-# добавление типа идентиф , редактирование
+# Добавление ТИ, редактирование
 
 from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-from config import edit_type_identif, new_edit_type_identif
-
 from selenium.webdriver import Keys
+import random
 from time import sleep
+from termcolor import cprint
 
 
 def scroll_to_element(browser, element):
@@ -17,7 +16,13 @@ def scroll_to_element(browser, element):
     sleep(0.1)
 
 def edit_type_ident(browser):
-    wait = WebDriverWait(browser, 20)
+    wait = WebDriverWait(browser, 10)
+
+    cprint("Добавление ТИ, редактирование / test_func_edit_type_identif", "yellow")
+
+    # Редактирование типа идентификатора
+    edit_type_identif = f"ТИ_тест_{random.randint(10, 99)}"
+    new_edit_type_identif = f"ТИ_тест_изменен_{random.randint(10, 99)}"
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -29,7 +34,7 @@ def edit_type_ident(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Добавить']"))).click()
 
     # Ввести наименование
-    name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+    name = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Наименование']")))
     name.send_keys(edit_type_identif)
 
     # Сохранить
@@ -42,7 +47,7 @@ def edit_type_ident(browser):
         print(f"Текст уведомления: {last_notification_text}")
 
     sleep(0.2)
-    print(f"Карточка '{edit_type_identif}' создана")
+    print(f"Создан тип идентификатора '{edit_type_identif}'")
 
     # Получаю текст уведомление
     browser.implicitly_wait(10)
@@ -69,7 +74,7 @@ def edit_type_ident(browser):
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Редактировать']"))).click()
 
                 # Ввести наименование
-                name_zone = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+                name_zone = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Наименование']")))
                 name_zone.send_keys(Keys.BACKSPACE * 30)
                 name_zone.send_keys(new_edit_type_identif)
 
@@ -97,7 +102,7 @@ def edit_type_ident(browser):
 
     # проверка наличия созданной карточки
     if edit_type_ident(browser):
-        print(f"'{new_edit_type_identif}' - отредактирована")
+        print(f"'{new_edit_type_identif}' - отредактирован")
     else:
         print(f"'{new_edit_type_identif}' - не найден")
 

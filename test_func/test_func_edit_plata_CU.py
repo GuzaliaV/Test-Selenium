@@ -4,12 +4,10 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from config import new_edit_name_BU, edit_name_CU, edit_number_in_chain, new_edit_name_CU, new_edit_number_in_chain
-
 from time import sleep
 from selenium.webdriver import Keys
-
+from termcolor import cprint
 
 def scroll_to_element(browser, element):
     # Прокрутка страницы
@@ -18,6 +16,8 @@ def scroll_to_element(browser, element):
 
 def edit_card_CU(browser):
     wait = WebDriverWait(browser, 10)
+
+    cprint("Платы. Редактирование платы CU / test_func_edit_plata_CU", "yellow")
 
     # Клик на Справочники
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Справочники']"))).click()
@@ -32,22 +32,22 @@ def edit_card_CU(browser):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Добавить KR-CU']"))).click()
 
     # Ввести наименование
-    name_plata = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+    name_plata = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Наименование платы']")))
     name_plata.send_keys(edit_name_CU)
 
     # Выбрать тип KR-CU
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id = 'demo-simple-select-helper'])[1]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id = 'Выбрать тип KR-CU']"))).click()
     wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@data-value='CU_48']"))).click()
 
     # Выбрать плату KR-BU
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id='demo-simple-select-helper'])[2]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='Выбрать плату KR-BU']"))).click()
     bu = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{new_edit_name_BU}']")))
     browser.execute_script("arguments[0].scrollIntoView();", bu)
     sleep(0.1)
     bu.click()
 
     # Номер в цепи
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@id='demo-simple-select-helper'])[3]"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='Номер в цепи']"))).click()
     num = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{edit_number_in_chain}']")))
     browser.execute_script("arguments[0].scrollIntoView();", num)
     sleep(0.1)
@@ -55,7 +55,7 @@ def edit_card_CU(browser):
 
     # Сохранить
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Сохранить']"))).click()
-    sleep(0.2)
+    sleep(1)
     print(f"Плата '{edit_name_CU}' создана")
 
     # Получаю текст уведомление
@@ -79,18 +79,20 @@ def edit_card_CU(browser):
 
                 # открыть плату
                 browser.find_element(By.XPATH, f"//h2[text()= '{edit_name_CU}']").click()
+                sleep(1)
 
                 # редактировать
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Редактировать']"))).click()
+                sleep(1)
 
                 # изменить наименование
-                text_name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@id = 'outlined-basic'])[2]")))
+                text_name = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id = 'Наименование']")))
                 text_name.send_keys(Keys.BACKSPACE * 30)
                 text_name.send_keys(new_edit_name_CU)
 
                 # Номер в цепи
                 wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@class = 'MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1nvf7g0'])[2]"))).click()
-                wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='demo-simple-select-helper']"))).click()
+                wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='Номер в цепи']"))).click()
                 num = wait.until(EC.visibility_of_element_located((By.XPATH, f"//li[text()= '{new_edit_number_in_chain}']")))
                 browser.execute_script("arguments[0].scrollIntoView();", num)
                 sleep(0.1)

@@ -5,14 +5,15 @@ from browser_setup import browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from test_func.func_search_client import search_phone
-
 from time import sleep
+from termcolor import cprint
 
 
 def client_activation(browser):
     wait = WebDriverWait(browser, 10)
+
+    cprint("Клиенты. Карточка клиента. Вернуть активность / test_func_client_activation", "yellow")
 
     # клик по кнопке Клиент
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()= 'Клиенты']"))).click()
@@ -40,6 +41,7 @@ def client_activation(browser):
 
     # вернуть активность
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Вернуть активность']"))).click()
+    sleep(0.5)
 
     # Получаю текст уведомление
     browser.implicitly_wait(10)
