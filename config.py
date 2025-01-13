@@ -20,12 +20,11 @@ address_input_2 = f"192.168.25.{random.randint(100, 999)}"
 port_api_2 = "9991"
 new_address_input_2 = f"192.168.25.{random.randint(100, 999)}"
 
-#
 
 # Создание платы BU
-#name_BU_text = f"BU_тест_{random.randint(100, 999)}"
-name_BU_text = "BU_test"
-ip_plata = "192.168.25.151"
+name_BU_text = f"BU_тест_{random.randint(100, 999)}"
+#name_BU_text = "BU_test"
+ip_plata = "192.168.25.184"
 
 # Создание и редактирование платы BU
 edit_name_BU = f"Новая_BU_{random.randint(10, 99)}"
@@ -36,8 +35,8 @@ new_edit_ip_plata = f"192.168.25.{random.randint(100, 999)}"
 
 
 # Создание платы CU
-# name_CU_text = f"CU_тест_{random.randint(100, 999)}"
-name_CU_text = "CU_test"
+name_CU_text = f"CU_тест_{random.randint(100, 999)}"
+#name_CU_text = "CU_test"
 number_in_chain = "0"
 
 # Создание и редактирование платы CU
@@ -49,15 +48,15 @@ new_edit_number_in_chain = f"{random.randint(0, 9)}"
 
 
 # Создание зоны публичной
-name_zone_publ = "Зона_тест_публичная"
-num_from_publ = "1"
-num_to_publ = "5"
+name_zone_publ = "Сейфовые ячейки"
+num_from_publ = "16"
+num_to_publ = "25"
 # Создание набора замков
 name_lock_publ = "Замки_тест_публ"
 
 
 # Создание зоны приватной
-name_zone_private = "Зона_тест_приватная"
+name_zone_private = "VIP (приватные шкафы)"
 num_from_private = "6"
 num_to_private = "10"
 # Создание набора замков
@@ -65,7 +64,7 @@ name_lock_priv = "Замки_тест_прив"
 
 
 # Создание зоны корпоративной
-name_zone_corp = "Зона_тест_корп"
+name_zone_corp = "Мужская раздевалка"
 num_from_corp = "11"
 num_to_corp = "15"
 # Создание набора замков

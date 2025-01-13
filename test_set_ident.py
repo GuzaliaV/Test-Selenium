@@ -9,14 +9,14 @@
 
 
 from browser_setup import browser
-from test_kerong.test_authorization import authorization
-from test_func.test_func_add_identif import add_ident
-from test_func.test_func_edit_identif import edit_ident
-from test_func.test_func_delete_identif import delete_ident
-from test_func.test_func_delete_first_identif import delete_first_identif
-from test_func.test_func_search_identif import search_identif
-from test_func.test_func_filter_identif import filter_identif
-from test_func.test_func_downloads_ident import downloads_ident
+from test_auth.test_authorization import authorization
+from test_identif.test_func_identif.test_func_add_identif import add_ident
+from test_identif.test_func_identif.test_func_edit_identif import edit_ident
+from test_identif.test_func_identif.test_func_delete_identif import delete_ident
+from test_identif.test_func_identif.test_func_delete_first_identif import delete_first_identif
+from test_identif.test_func_identif.test_func_search_identif import search_identif
+from test_identif.test_func_identif.test_func_filter_identif import filter_identif
+from test_identif.test_func_identif.test_func_downloads_ident import downloads_ident
 from termcolor import cprint
 
 

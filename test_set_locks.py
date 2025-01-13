@@ -7,12 +7,12 @@
 
 
 from browser_setup import browser
-from test_kerong.test_authorization import authorization
-from test_func.test_func_add_lock_priv import add_lock_priv
-from test_func.test_func_add_lock_corp import add_lock_corp
-from test_func.test_func_add_lock_publ import add_lock_publ
-from test_func.test_func_search_locks import search_locks
-from test_func.test_func_delete_locks import delete_locks
+from test_auth.test_authorization import authorization
+from test_locks.test_func_locks.test_func_add_lock_priv import add_lock_priv
+from test_locks.test_func_locks.test_func_add_lock_corp import add_lock_corp
+from test_locks.test_func_locks.test_func_add_lock_publ import add_lock_publ
+from test_locks.test_func_locks.test_func_search_locks import search_locks
+from test_locks.test_func_locks.test_func_delete_locks import delete_locks
 from termcolor import cprint
 
 

@@ -9,14 +9,14 @@
 
 
 from browser_setup import browser
-from test_kerong.test_authorization import authorization
-from test_func.test_func_add_zone_private import add_zone_private
-from test_func.test_func_add_zone_publ import add_zone_publ
-from test_func.test_func_add_zone_corp import add_zone_corp
-from test_func.test_func_edit_zone_publ import edit_zone_publ
-from test_func.test_func_search_zona import search_zona
-from test_func.test_func_filter_zona import filter_zona
-from test_func.test_func_downloads_zona import downloads_zona
+from test_auth.test_authorization import authorization
+from test_zona.test_func_zona.test_func_add_zone_private import add_zone_private
+from test_zona.test_func_zona.test_func_add_zone_publ import add_zone_publ
+from test_zona.test_func_zona.test_func_add_zone_corp import add_zone_corp
+from test_zona.test_func_zona.test_func_edit_zone_publ import edit_zone_publ
+from test_zona.test_func_zona.test_func_search_zona import search_zona
+from test_zona.test_func_zona.test_func_filter_zona import filter_zona
+from test_zona.test_func_zona.test_func_downloads_zona import downloads_zona
 from termcolor import cprint
 
 
